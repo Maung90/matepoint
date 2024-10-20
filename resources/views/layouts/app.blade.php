@@ -2,32 +2,32 @@
 <html lang="en">
   <head>
     <!--  Title -->
-    <title>Mordenize</title>
+    <title>@yield('title', 'Matepoint')</title>
     <!--  Required Meta Tag -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="handheldfriendly" content="true" />
     <meta name="MobileOptimized" content="width" />
-    <meta name="description" content="Mordenize" />
+    <meta name="description" content="Matepoint" />
     <meta name="author" content="" />
-    <meta name="keywords" content="Mordenize" />
+    <meta name="keywords" content="Matepoint" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!--  Favicon -->
-    <link rel="shortcut icon" type="image/png" href="dist/images/logos/favicon.ico" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.ico') }}" />
     <!-- Owl Carousel  -->
-    <link rel="stylesheet" href="dist/libs/owl.carousel/dist/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
     
     <!-- Core Css -->
-    <link  id="themeColors"  rel="stylesheet" href="dist/css/style.min.css" />
+    <link  id="themeColors"  rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
   </head>
   <body>
     <!-- Preloader -->
     <div class="preloader">
-      <img src="dist/images/logos/favicon.ico" alt="loader" class="lds-ripple img-fluid" />
+      <img src="{{ asset('assets/images/logos/favicon.ico') }}" alt="loader" class="lds-ripple img-fluid" />
     </div>
     <!-- Preloader -->
     <div class="preloader">
-      <img src="dist/images/logos/favicon.ico" alt="loader" class="lds-ripple img-fluid" />
+      <img src="{{ asset('assets/images/logos/favicon.ico') }}" alt="loader" class="lds-ripple img-fluid" />
     </div>
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-theme="blue_theme"  data-layout="vertical" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
@@ -36,9 +36,9 @@
         <!-- Sidebar scroll-->
         <div>
           <div class="brand-logo d-flex align-items-center justify-content-between">
-            <a href="./index.html" class="text-nowrap logo-img">
-              <img src="dist/images/logos/dark-logo.svg" class="dark-logo" width="180" alt="" />
-              <img src="dist/images/logos/light-logo.svg" class="light-logo"  width="180" alt="" />
+            <a href="/" class="text-nowrap logo-img">
+              <img src="{{ asset('assets/images/logos/dark-logo.svg') }}" class="dark-logo" width="180" alt="" />
+              <img src="{{ asset('assets/images/logos/light-logo.svg') }}" class="light-logo"  width="180" alt="" />
             </a>
             <div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
               <i class="ti ti-x fs-8 text-muted"></i>
@@ -58,7 +58,7 @@
               <!-- Dashboard -->
               <!-- =================== -->
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/') ? 'active' : '' }}" href="/" aria-expanded="false">
                   <span>
                     <i class="ti ti-home"></i>
                   </span>
@@ -73,15 +73,15 @@
                 <span class="hide-menu">PAGES - admin</span>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./user.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/user') ? 'active' : '' }}" href="/user" aria-expanded="false">
                   <span>
                     <i class="ti ti-user-circle"></i>
                   </span>
                   <span class="hide-menu">User</span>
                 </a>
               </li>
-              <li class="sidebar-item active">
-                <a class="sidebar-link" href="./list_pembayaran.html" aria-expanded="false">
+              <li class="sidebar-item">
+                <a class="sidebar-link {{ Request::is('/list-pembayaran') ? 'active' : '' }}" href="/list-pembayaran" aria-expanded="false">
                   <span>
                     <i class="ti ti-currency-dollar"></i>
                   </span>
@@ -96,7 +96,7 @@
                 <span class="hide-menu">PAGES - konsultan</span>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./app-chat.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/chat') ? 'active' : '' }}" href="/chat" aria-expanded="false">
                   <span>
                     <i class="ti ti-message-dots"></i>
                   </span>
@@ -104,7 +104,7 @@
                 </a>
               </li> 
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./page-account-settings.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/account-settings') ? 'active' : '' }}" href="/account-settings" aria-expanded="false">
                   <span>
                     <i class="ti ti-user-circle"></i>
                   </span>
@@ -119,7 +119,7 @@
                 <span class="hide-menu">PAGES - talent</span>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./app-chat.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/chat') ? 'active' : '' }}" href="/chat" aria-expanded="false">
                   <span>
                     <i class="ti ti-message-dots"></i>
                   </span>
@@ -127,7 +127,7 @@
                 </a>
               </li> 
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./page-account-settings.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/account-settings') ? 'active' : '' }}" href="/account-settings" aria-expanded="false">
                   <span>
                     <i class="ti ti-user-circle"></i>
                   </span>
@@ -142,7 +142,7 @@
                 <span class="hide-menu">PAGES - pembeli</span>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./app-chat.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/talent') ? 'active' : '' }}" href="/talent" aria-expanded="false">
                   <span>
                     <i class="ti ti-message-dots"></i>
                   </span>
@@ -150,7 +150,7 @@
                 </a>
               </li> 
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./app-chat.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/profesional') ? 'active' : '' }}" href="/profesional" aria-expanded="false">
                   <span>
                     <i class="ti ti-message-dots"></i>
                   </span>
@@ -158,7 +158,7 @@
                 </a>
               </li> 
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./page-pricing.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/list-pembayaran') ? 'active' : '' }}" href="/list-pembayaran" aria-expanded="false">
                   <span>
                     <i class="ti ti-currency-dollar"></i>
                   </span>
@@ -166,7 +166,7 @@
                 </a>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="./page-account-settings.html" aria-expanded="false">
+                <a class="sidebar-link {{ Request::is('/account-settings') ? 'active' : '' }}" href="/account-settings" aria-expanded="false">
                   <span>
                     <i class="ti ti-user-circle"></i>
                   </span>
@@ -193,8 +193,8 @@
               </li> 
             </ul> 
             <div class="d-block d-lg-none">
-              <img src="dist/images/logos/dark-logo.svg" class="dark-logo" width="180" alt="" />
-              <img src="dist/images/logos/light-logo.svg" class="light-logo"  width="180" alt="" />
+              <img src="{{ asset('assets/images/logos/dark-logo.svg') }}" class="dark-logo" width="180" alt="" />
+              <img src="{{ asset('assets/images/logos/light-logo.svg') }}" class="light-logo"  width="180" alt="" />
             </div>
             <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="p-2">
@@ -211,7 +211,7 @@
                     <a class="nav-link pe-0" href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown" aria-expanded="false">
                       <div class="d-flex align-items-center">
                         <div class="user-profile-img">
-                          <img src="dist/images/profile/user-1.jpg" class="rounded-circle" width="35" height="35" alt="" />
+                          <img src="{{ asset('assets/images/profile/user-1.jpg') }}" class="rounded-circle" width="35" height="35" alt="" />
                         </div>
                       </div>
                     </a>
@@ -221,7 +221,7 @@
                           <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
                         </div>
                         <div class="d-flex align-items-center py-9 mx-7 border-bottom">
-                          <img src="dist/images/profile/user-1.jpg" class="rounded-circle" width="80" height="80" alt="" />
+                          <img src="{{ asset('assets/images/profile/user-1.jpg') }}" class="rounded-circle" width="80" height="80" alt="" />
                           <div class="ms-3">
                             <h5 class="mb-1 fs-3">Mathew Anderson</h5>
                             <span class="mb-1 d-block text-dark">Designer</span>
@@ -231,27 +231,27 @@
                           </div>
                         </div>
                         <div class="message-body">
-                          <a href="./page-user-profile.html" class="py-8 px-7 mt-8 d-flex align-items-center">
+                          <a href="./page-user-profile" class="py-8 px-7 mt-8 d-flex align-items-center">
                             <span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
-                              <img src="dist/images/svgs/icon-account.svg" alt="" width="24" height="24">
+                              <img src="{{ asset('assets/images/svgs/icon-account.svg') }}" alt="" width="24" height="24">
                             </span>
                             <div class="w-75 d-inline-block v-middle ps-3">
                               <h6 class="mb-1 bg-hover-primary fw-semibold"> My Profile </h6>
                               <span class="d-block text-dark">Account Settings</span>
                             </div>
                           </a>
-                          <a href="./app-email.html" class="py-8 px-7 d-flex align-items-center">
+                          <a href="./app-email" class="py-8 px-7 d-flex align-items-center">
                             <span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
-                              <img src="dist/images/svgs/icon-inbox.svg" alt="" width="24" height="24">
+                              <img src="{{ asset('assets/images/svgs/icon-inbox.svg') }}" alt="" width="24" height="24">
                             </span>
                             <div class="w-75 d-inline-block v-middle ps-3">
                               <h6 class="mb-1 bg-hover-primary fw-semibold">My Inbox</h6>
                               <span class="d-block text-dark">Messages & Emails</span>
                             </div>
                           </a>
-                          <a href="./app-notes.html" class="py-8 px-7 d-flex align-items-center">
+                          <a href="./app-notes" class="py-8 px-7 d-flex align-items-center">
                             <span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
-                              <img src="dist/images/svgs/icon-tasks.svg" alt="" width="24" height="24">
+                              <img src="{{ asset('assets/images/svgs/icon-tasks.svg') }}" alt="" width="24" height="24">
                             </span>
                             <div class="w-75 d-inline-block v-middle ps-3">
                               <h6 class="mb-1 bg-hover-primary fw-semibold">My Task</h6>
@@ -260,7 +260,7 @@
                           </a>
                         </div>
                         <div class="d-grid py-4 px-7 pt-8"> 
-                          <a href="./authentication-login.html" class="btn btn-outline-primary">Log Out</a>
+                          <a href="./authentication-login" class="btn btn-outline-primary">Log Out</a>
                         </div>
                       </div>
                     </div>
@@ -272,29 +272,7 @@
         </header>
         <!--  Header End -->
         <div class="container-fluid">
-          <div class="card bg-light-info shadow-none position-relative overflow-hidden">
-            <div class="card-body px-4 py-3">
-              <div class="row align-items-center">
-                <div class="col-9">
-                  <h4 class="fw-semibold mb-8">List Pembayaran</h4>
-                  <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                      <li class="breadcrumb-item"><a class="text-muted " href="./index.html">Dashboard</a></li>
-                      <li class="breadcrumb-item" aria-current="page">Pembayaran</li>
-                    </ol>
-                  </nav>
-                </div>
-                <div class="col-3">
-                  <div class="text-center mb-n5">  
-                    <img src="dist/images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="widget-content searchable-container list"> 
-
-          </div>
+          @yield('content')
         </div>
       </div>
       <div class="dark-transparent sidebartoggler"></div>
@@ -302,17 +280,18 @@
     </div>
 
     <!--  Import Js Files -->
-    <script src="dist/libs/jquery/dist/jquery.min.js"></script>
-    <script src="dist/libs/simplebar/dist/simplebar.min.js"></script>
-    <script src="dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/libs/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/dist/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <!--  core files -->
-    <script src="dist/js/app.min.js"></script>
-    <script src="dist/js/app.init.js"></script>
-    <script src="dist/js/app-style-switcher.js"></script>
-    <script src="dist/js/sidebarmenu.js"></script>
-    <script src="dist/js/custom.js"></script>
+    <script src="{{ asset('assets/js/app.min.js') }}"></script>
+    <script src="{{ asset('assets/js/app.init.js') }}"></script>
+    <script src="{{ asset('assets/js/app-style-switcher.js') }}"></script>
+    <script src="{{ asset('assets/js/sidebarmenu.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
     <!--  current page js files -->
-    <script src="dist/libs/owl.carousel/dist/owl.carousel.min.js"></script>
-    <script src="dist/js/apps/contact.js"></script> 
+    <script src="{{ asset('assets/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dashboard.js') }}"></script>
   </body>
 </html>
