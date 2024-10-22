@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Message;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,6 +39,7 @@ class MessageController extends Controller
         }
 
         $list = Message::getChatUsers($this->id_pengirim);
+        // $list = Pembayaran::with('customer')->where('id_customer', $this->id_pengirim)->get();
 
         return view('message', compact('messages', 'list', 'id'));
     }
@@ -85,6 +87,14 @@ class MessageController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'Penerima tidak ditemukan.'
+                ], 404);
+            }
+
+            $checkTrx = Pembayaran::where('id_worker', $id)->where('id_customer', $this->id_pengirim)->first();
+            if (!$checkTrx) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak dapat meminta Konsultasi.'
                 ], 404);
             }
 

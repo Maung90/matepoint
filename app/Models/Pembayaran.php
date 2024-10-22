@@ -17,4 +17,9 @@ class Pembayaran extends Model
         'id_customer',
         'id_worker',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'id_customer');
+    }
 }
