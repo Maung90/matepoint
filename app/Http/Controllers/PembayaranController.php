@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Pembayaran;
+use App\Models\Pembayaran; 
+use App\Models\Message;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -46,6 +47,23 @@ class PembayaranController extends Controller
     {
         $pembayaran = Pembayaran::find($id);
 
+        if ($request->status_bayar == 'paid') {
+            $welcome_msg = "Hallo bagaimana kabar mu ? semoga sehat yaa...";
+            if ($pembayaran->sharingSession == "online") {
+                $welcome_msg = "Halo, selamat datang di sesi konsultasi online kami. Silakan ajukan pertanyaan atau diskusi langsung di sini. Kami siap membantu Anda secara virtual. Selamat berkonsultasi!";
+
+            }else{
+                $welcome_msg = "Halo, terima kasih telah hadir dalam sesi konsultasi offline kami. Jangan ragu untuk bertanya atau berdiskusi. Kami siap membantu dan memberikan solusi terbaik. Selamat berkonsultasi!";
+
+            }
+
+            Message::create([
+                'id_penerima' => $pembayaran->id_customer,
+                'id_pengirim' => $pembayaran->id_worker,
+                'body' => $welcome_msg,
+            ]);
+        }
+
         if (!$pembayaran) {
             return response()->json(['error' => 'Data not found'], 404);
         }
@@ -59,6 +77,8 @@ class PembayaranController extends Controller
         $pembayaran->status_bayar = $request->status_bayar;
         $pembayaran->updated_at = now();
         $pembayaran->save();
+
+        
 
         return response()->json(['success' => 'Data has been updated'], 200);
     }

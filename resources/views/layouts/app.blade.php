@@ -160,7 +160,7 @@
 							</a>
 						</li> 
 						<li class="sidebar-item">
-							<a class="sidebar-link {{ Request::is('/list-pembayaran') ? 'active' : '' }}" href="/list-pembayaran" aria-expanded="false">
+							<a class="sidebar-link {{ Request::is('/pembayaran-customer') ? 'active' : '' }}" href="/pembayaran-customer" aria-expanded="false">
 								<span>
 									<i class="ti ti-currency-dollar"></i>
 								</span>
