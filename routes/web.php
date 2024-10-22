@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PembayaranController;
 
 Route::get('/', function () {
     return view('landing-page');
@@ -36,6 +38,12 @@ Route::put('/pembayaran/{id}', [PembayaranController::class, 'update'])->name('p
 Route::delete('/pembayaran/{id}', [PembayaranController::class, 'destroy'])->name('pembayarans.destroy');
 
 
-Route::resource('chat', ChatController::class);
+// Route::resource('chat', ChatController::class);
+Route::controller(MessageController::class)->group(function () {
+    Route::get('/message', 'view')->name('message.view');
+    Route::get('get/{id}', 'get')->name('message.get');
+    Route::get('detail/{id}', 'detail')->name('message.detail');
+    Route::post('create/{id}', 'create')->name('message.create');
+});
 Route::get('/chat/{id}', [ChatController::class, 'getChat'])->name('chat.getChat');
 
