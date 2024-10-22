@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PembayaranController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -47,7 +49,14 @@ Route::delete('/pembayaran/{id}', [PembayaranController::class, 'destroy'])->nam
 Route::post('/upload-bukti', [PembayaranController::class, 'uploadBukti'])->name('upload.bukti'); //upload bukti
 
 
-Route::resource('chat', ChatController::class);
+// Route::resource('chat', ChatController::class);
+Route::controller(MessageController::class)->group(function () {
+    Route::get('/message', 'view')->name('message.view');
+    Route::get('get/{id}', 'get')->name('message.get');
+    Route::get('detail/{id}', 'detail')->name('message.detail');
+    Route::post('create/{id}', 'create')->name('message.create');
+});
+
 Route::get('/chat/{id}', [ChatController::class, 'getChat'])->name('chat.getChat');
 
 
