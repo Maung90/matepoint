@@ -47,7 +47,7 @@
               </span>
             </div>
             <div class="ms-3">
-              <h6 class="mb-2 fw-semibold">{{ $user->name }}</h6> 
+              <h6 class="mb-2 fw-semibold">{{ auth()->user()->name }}</h6> 
             </div>
           </div> 
         </div>
@@ -103,7 +103,7 @@
                   <input type="text" class="p-0 border-0 form-control message-type-box text-muted ms-2" id="text-message" placeholder="Type a Message" />
                 </div>
                 <ul class="mb-0 list-unstyledn d-flex align-items-center">
-                  <input type="hidden" id="id_penerima">
+                  <input type="hidden" id="id_penerima" value="{{ isset($id) ? $id : '' }}">
                   <li id="send-message"><a class="px-2 text-dark fs-7 bg-hover-primary nav-icon-hover position-relative z-index-5 " href="javascript:void(0)"><i class="ti ti-send"></i></a></li>
                 </ul>
               </div>
@@ -127,7 +127,7 @@
             </span>
           </div>
           <div class="ms-3">
-            <h6 class="mb-2 fw-semibold">Mathew Anderson</h6> 
+            <h6 class="mb-2 fw-semibold">{{ auth()->user()->name }}</h6> 
           </div>
         </div> 
       </div>  
@@ -161,66 +161,81 @@
 <!-- content -->
 @endsection
 @section('js')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
 
-  $(document).ready(function() {
-    $('.chat-user').click(function() {
-        let id = $(this).data('id');
+  
+    $(document).ready(function() {
+        $('.chat-user').click(function() {
+            let id = $(this).data('id');
+            
+            $.ajax({
+              url: '{{ route("message.detail", ":id") }}'.replace(':id', id),
+              type: 'GET',
+              success: function(response) { 
+                  $('#id_penerima').val(id);
+                  $('#display_message').html(response);
+              },
+              error: function(xhr, status, error) {
+                let msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan.';
+                toastr.error('Gagal memuat detail pesan. Error: ' + msg);
+              }
+            });
+        });
         
-        $.ajax({
-            url: '{{ route("message.get", ":id") }}'.replace(':id', id),
-            type: 'GET',
-            success: function(response) { 
-                console.log(response);
-                $.ajax({
-                  url: '{{ route("message.detail", ":id") }}'.replace(':id', id),
-                  type: 'GET',
-                  success: function(response) { 
-                      $('#id_penerima').val(id);
-                      $('#display_message').html(response);
-                  },
-                  error: function(xhr, status, error) {
-                      console.log('Error:', error);
-                  }
-                });
-            },
-            error: function(xhr, status, error) {
-                console.log('Error:', error);
-            }
+        $('#send-message').click(function() {
+            let id_penerima = $('#id_penerima').val();
+            let body = $('#text-message').val();
+            
+            $.ajax({
+                url: '{{ route("message.create", ":id") }}'.replace(':id', id_penerima),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    body: body
+                },
+                success: function(response) {
+                    $('#text-message').val('');
+                    
+                    $.ajax({
+                        url: '{{ route("message.detail", ":id") }}'.replace(':id', id_penerima),
+                        type: 'GET',
+                        success: function(response) { 
+                            $('#display_message').html(response);
+                        },
+                        error: function(xhr, status, error) {
+                          let msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan.';
+                          toastr.error('Gagal memuat detail pesan setelah mengirim. Error: ' + msg);
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    let msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan.';
+                    toastr.error('Gagal mengirim pesan. Error: ' + msg);
+                }
+            });
         });
     });
     
-    $('#send-message').click(function() {
-        let id_penerima = $('#id_penerima').val();
-        let body = $('#text-message').val();
-        
-        $.ajax({
-            url: '{{ route("message.create", ":id") }}'.replace(':id', id_penerima),
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                body: body
-            },
-            success: function(response) {
-                $('#text-message').val('');
-                
-                $.ajax({
-                    url: '{{ route("message.detail", ":id") }}'.replace(':id', id_penerima),
-                    type: 'GET',
-                    success: function(response) { 
-                        $('#display_message').html(response);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Error:', error);
-                    }
-                });
-            },
-            error: function(xhr, status, error) {
-                console.log('Error:', error);
-            }
-        });
-    });
-
-  });
+    @if(isset($id))
+      $(document).ready(function() {
+          let id = '{{ $id }}';
+          $.ajax({
+              url: '{{ route("message.detail", ":id") }}'.replace(':id', id),
+              type: 'GET',
+              success: function(response) { 
+                  $('#id_penerima').val(id);
+                  $('#display_message').html(response);
+              },
+              error: function(xhr, status, error) {
+                let msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan.';
+                toastr.error(msg);
+              }
+          });
+      });
+    @endif
 </script>
+
+
 @endsection
