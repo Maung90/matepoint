@@ -24,6 +24,10 @@ Route::get('/user', function () {
 Route::get('/list-pembayaran', function () {
     return view('pembayaran');
 });
+// Route::get('/pembayaran-customer', function () {
+//     return view('bayarCustomer');
+// });
+
 Route::get('/chat', function () {
     return view('chat');
 });
@@ -47,6 +51,7 @@ Route::get('/pembayaran/get/{id}', [PembayaranController::class, 'get'])->name('
 Route::put('/pembayaran/{id}', [PembayaranController::class, 'update'])->name('pembayaran.update'); //update status
 Route::delete('/pembayaran/{id}', [PembayaranController::class, 'destroy'])->name('pembayarans.destroy'); //delete
 Route::post('/upload-bukti', [PembayaranController::class, 'uploadBukti'])->name('upload.bukti'); //upload bukti
+Route::get('/pembayaran-customer', [PembayaranController::class, 'getForCustomer']);
 
 
 // Route::resource('chat', ChatController::class);

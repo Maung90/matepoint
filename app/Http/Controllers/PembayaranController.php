@@ -18,6 +18,16 @@ class PembayaranController extends Controller
         ->get();
         return view('pembayaran', compact('pembayarans'));
     }
+    public function getForCustomer()
+    {
+        $pembayarans = Pembayaran::join('users as customer', 'pembayaran.id_customer', '=', 'customer.id')
+        ->join('users as worker', 'pembayaran.id_worker', '=', 'worker.id') 
+        ->select('*', 'pembayaran.id as idPembayaran', 'customer.name as nama_customer', 'worker.name as nama_worker')
+        ->where('pembayaran.id_customer',session('user_id')) 
+        ->orderBy('pembayaran.id','DESC')  
+        ->get();
+        return view('bayarCustomer', compact('pembayarans'));
+    }
     public function get($id)
     {
         $pembayarans = Pembayaran::join('users as customer', 'pembayaran.id_customer', '=', 'customer.id')
@@ -26,6 +36,7 @@ class PembayaranController extends Controller
         ->get();
         return response()->json($pembayarans);
     }
+
     public function edit($id)
     {
         $pembayaran = Pembayaran::find($id);

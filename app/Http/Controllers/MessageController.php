@@ -12,7 +12,7 @@ class MessageController extends Controller
 
     public function __construct()
     {
-        $this->id_pengirim = 3;
+        $this->id_pengirim = session('user_id');
     }
 
     public function view()
