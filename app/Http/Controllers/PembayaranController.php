@@ -9,8 +9,19 @@ class PembayaranController extends Controller
 { 
     public function index()
     {
-        $pembayarans = Pembayaran::all();
+        $pembayarans = Pembayaran::join('users as customer', 'pembayaran.id_customer', '=', 'customer.id')
+        ->join('users as worker', 'pembayaran.id_worker', '=', 'worker.id') 
+        ->select('*', 'customer.name as nama_customer', 'worker.name as nama_worker')  
+        ->get();
         return view('pembayaran', compact('pembayarans'));
+    }
+    public function get()
+    {
+        $pembayarans = Pembayaran::join('users as customer', 'pembayaran.id_customer', '=', 'customer.id')
+        ->join('users as worker', 'pembayaran.id_worker', '=', 'worker.id') 
+        ->select('*', 'customer.name as nama_customer', 'worker.name as nama_worker')  
+        ->get();
+        return response()->json($pembayarans);
     }
     public function edit($id)
     {
