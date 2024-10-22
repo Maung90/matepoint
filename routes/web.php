@@ -55,14 +55,13 @@ Route::get('/pembayaran-customer', [PembayaranController::class, 'getForCustomer
 
 
 // Route::resource('chat', ChatController::class);
-Route::controller(MessageController::class)->group(function () {
-    Route::get('/message', 'view')->name('message.view');
-    Route::get('get/{id}', 'get')->name('message.get');
+Route::prefix('chat')->controller(MessageController::class)->group(function () {
+    Route::get('/', 'view')->name('message.view');
+    Route::get('/{id}', 'view')->name('message.view');
     Route::get('detail/{id}', 'detail')->name('message.detail');
     Route::post('create/{id}', 'create')->name('message.create');
 });
 
-Route::get('/chat/{id}', [ChatController::class, 'getChat'])->name('chat.getChat');
 
 
 // Route untuk tampilan login
