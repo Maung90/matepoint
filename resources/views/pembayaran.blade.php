@@ -49,16 +49,16 @@
 					@foreach ($pembayarans as $pembayaran)
 					<tr>
 						<td>{{ $pembayaran->kode_pembayaran }}</td>
-						<td>{{ $pembayaran->id_customer }}</td>
-						<td>{{ $pembayaran->id_worker }}</td>
-						<td>Rp. 80 000</td>
+						<td>{{ $pembayaran->nama_customer }}</td>
+						<td>{{ $pembayaran->nama_worker }}</td>
+						<td>{{ $pembayaran->harga }}</td>
 						<td>
 							<span class="badge bg-{{$pembayaran->status_bayar == 'paid' ? 'success' : 'danger' }}">
 								{{ $pembayaran->status_bayar }}
 							</span>
 						</td>
 						<td>
-							<button type="button" class="btn btn-sm waves-effect waves-light btn-primary edit-btn" data-id="{{$pembayaran->id}}" data-bs-toggle="modal" data-bs-target="#edit-modal ">
+							<button type="button" class="btn btn-sm waves-effect waves-light btn-primary info-btn" data-id="{{$pembayaran->id}}" data-bs-toggle="modal" data-bs-target="#info-modal ">
 								<i class="ti ti-info-circle"></i>
 							</button>
 							<button type="button" class="btn btn-sm waves-effect waves-light btn-warning edit-btn" data-id="{{$pembayaran->id}}" data-bs-toggle="modal" data-bs-target="#edit-modal ">
@@ -108,21 +108,63 @@
 	</div> 
 </div>
 
-<div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
-	<div class="modal-dialog modal-sm">
+<div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-md">
 		<form action="POST" id="updateForm"> 
 			<div class="modal-content">
 				<div class="modal-header d-flex align-items-center">
 					<h4 class="modal-title" id="myModalLabel">
-						Edit Status 
+						Info Pembayaran
 					</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body"> 
-					<select name="status_bayar" id="status_bayar" class="form-select" required>
-						<option value="paid">paid</option>
-						<option value="nonpaid">nonpaid</option>
-					</select>
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-12 my-1">
+									<table class="table table-bordered">
+										<tr>
+											<td>
+												Kode Pembayaran
+											</td>
+											<td id="kode_pembayaran"> 
+												-
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Customer
+											</td>
+											<td id="nama_customer">
+												-
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Worker
+											</td>
+											<td id="nama_worker">
+												-
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Harga
+											</td>
+											<td id="harga">
+												-
+											</td>
+										</tr>
+									</table> 
+								</div>
+								<div class="col-12">
+									<span class="text-muted">Bukti Pembayaran : </span>
+									<img src="{{asset('dist/images/apps/app-email.jpg')}}" id="bukti_pembayaran" alt="bukti pembayaran" class="img-fluid">
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-light-success text-success font-medium waves-effect">
@@ -164,6 +206,25 @@
 				}
 			});
 		});
+		$('.info-btn').click(function() {
+			let id = $(this).data('id'); // Ambil ID dari data-id tombol
+			let url = '/pembayaran/get/' + id; // Buat URL untuk AJAX
+			let img = '';
+			// AJAX request untuk mendapatkan data pembayaran
+			$.ajax({
+				url: url,
+				type: 'GET',
+				success: function(response) {  
+					$('#kode_pembayaran').text(''+response[0].kode_pembayaran);
+					$('#nama_customer').text(''+response[0].nama_customer);
+					$('#nama_worker').text(''+response[0].nama_worker);
+					$('#harga').text('Rp. '+ response[0].harga);
+					img = '{{asset("assets/images/alert/")}}/'+response[0].bukti_bayar; 
+					$('#bukti_pembayaran').attr('src',img);
+					// console.log(response)
+				}
+			});
+		});
 	});
 
 	$('#updateForm').on('submit', function(e) {
@@ -188,8 +249,8 @@
         		if (result.isConfirmed) {
                     $('#editModal').modal('hide'); // Tutup modal
                     location.reload(); // Reload halaman untuk menampilkan perubahan
-                 }
-              });
+                }
+            });
         },
         error: function(response) {
             // Jika gagal, tampilkan pesan error
@@ -200,8 +261,8 @@
         		confirmButtonText: "OK"
         	});
         }
-     });
- });
+    });
+});
 
 
 	!(function ($) {

@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'notelp',
         'harga',
+        'role_id',
     ];
 
     /**
@@ -40,11 +41,28 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'email_verified_at' => 'datetime',
+    //         'password' => 'hashed',
+    //     ];
+    // }
+
+     protected $casts = [
+        'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+ 
+    public function role()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    // Helper untuk memudahkan pengecekan role berdasarkan ID
+    public function hasRoleId($roleId)
+    {
+        return $this->role_id == $roleId;
     }
 }
