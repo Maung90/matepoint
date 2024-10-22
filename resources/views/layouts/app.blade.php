@@ -22,7 +22,7 @@
 	@yield('css')
 </head>
 <body>
-	{{var_dump(session('user_id'));}}
+	
 	<!-- Preloader -->
 	<div class="preloader">
 		<img src="{{ asset('assets/images/logos/favicon.ico') }}" alt="loader" class="lds-ripple img-fluid" />

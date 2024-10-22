@@ -6,6 +6,8 @@ use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\TalentController;
+use App\Http\Controllers\ProfesionalController;
 
 Route::get('/', function () {
     return view('landing-page');
@@ -29,6 +31,7 @@ Route::get('/profesional', function () {
 Route::get('/talent', function () {
     return view('talent');
 });
+
 Route::get('/account-settings', function () {
     return view('account-settings');
 });
@@ -37,10 +40,11 @@ Route::get('/daftar', function () {
 });
 
 Route::resource('list-pembayaran', PembayaranController::class);
-Route::get('/pembayaran/{id}', [PembayaranController::class, 'edit'])->name('pembayaran.edit');
-Route::get('/pembayaran/get/{id}', [PembayaranController::class, 'get'])->name('pembayaran.get');
-Route::put('/pembayaran/{id}', [PembayaranController::class, 'update'])->name('pembayaran.update');
-Route::delete('/pembayaran/{id}', [PembayaranController::class, 'destroy'])->name('pembayarans.destroy');
+Route::get('/pembayaran/{id}', [PembayaranController::class, 'edit'])->name('pembayaran.edit'); // get all
+Route::get('/pembayaran/get/{id}', [PembayaranController::class, 'get'])->name('pembayaran.get'); //get by id
+Route::put('/pembayaran/{id}', [PembayaranController::class, 'update'])->name('pembayaran.update'); //update status
+Route::delete('/pembayaran/{id}', [PembayaranController::class, 'destroy'])->name('pembayarans.destroy'); //delete
+Route::post('/upload-bukti', [PembayaranController::class, 'uploadBukti'])->name('upload.bukti'); //upload bukti
 
 
 Route::resource('chat', ChatController::class);
@@ -83,3 +87,16 @@ Route::post('/logout', function () {
 Route::get('/dashboard', function () {
     return view('home');
 })->middleware('auth')->name('home');
+
+
+// TALENT
+Route::get('/talent', [TalentController::class, 'getUsersWithRoleIdTwo']);
+Route::get('/talent/get/{id}', [TalentController::class, 'get'])->name('talent.get');
+Route::post('/talent/store', [TalentController::class, 'store'])->name('talent.store');
+
+
+
+// PROFESIONAL
+Route::get('/profesional', [ProfesionalController::class, 'getUsersWithRoleIdTwo']);
+Route::get('/profesional/get/{id}', [ProfesionalController::class, 'get'])->name('profesional.get');
+Route::post('/profesional/store', [ProfesionalController::class, 'store'])->name('profesional.store');

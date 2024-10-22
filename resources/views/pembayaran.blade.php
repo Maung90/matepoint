@@ -37,34 +37,47 @@
 			<table class="table table-bordered" id="zero_config">
 				<thead>
 					<tr>
+						<th>No</th>
 						<th>Kode Pembayaran</th>
 						<th>Customer ID</th>
 						<th>Worker ID</th>
 						<th>Harga</th>
+						<th>Status Konsultasi</th>
 						<th>Status Bayar</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody> 
+					<?php $no = 0; ?>
 					@foreach ($pembayarans as $pembayaran)
+					<?php $no++; ?>
 					<tr>
+						<td>{{$no}}</td>
 						<td>{{ $pembayaran->kode_pembayaran }}</td>
 						<td>{{ $pembayaran->nama_customer }}</td>
 						<td>{{ $pembayaran->nama_worker }}</td>
 						<td>{{ $pembayaran->harga }}</td>
+						<td>
+							<span class="badge bg-{{$pembayaran->statusKonsul == 'proses' ? 'warning' : 'primary' }}">
+								{{ $pembayaran->statusKonsul }}
+							</span>
+						</td>
 						<td>
 							<span class="badge bg-{{$pembayaran->status_bayar == 'paid' ? 'success' : 'danger' }}">
 								{{ $pembayaran->status_bayar }}
 							</span>
 						</td>
 						<td>
-							<button type="button" class="btn btn-sm waves-effect waves-light btn-primary info-btn" data-id="{{$pembayaran->id}}" data-bs-toggle="modal" data-bs-target="#info-modal ">
+							<button type="button" class="btn btn-sm waves-effect waves-light btn-primary info-btn" data-id="{{$pembayaran->idPembayaran}}" data-bs-toggle="modal" data-bs-target="#info-modal ">
 								<i class="ti ti-info-circle"></i>
 							</button>
-							<button type="button" class="btn btn-sm waves-effect waves-light btn-warning edit-btn" data-id="{{$pembayaran->id}}" data-bs-toggle="modal" data-bs-target="#edit-modal ">
+							<button type="button" class="btn btn-sm waves-effect waves-light btn-primary upload-btn" data-id="{{$pembayaran->idPembayaran}}" data-bs-toggle="modal" data-bs-target="#upload-modal ">
+								<i class="ti ti-upload"></i>
+							</button>
+							<button type="button" class="btn btn-sm waves-effect waves-light btn-warning edit-btn" data-id="{{$pembayaran->idPembayaran}}" data-bs-toggle="modal" data-bs-target="#edit-modal ">
 								<i class="ti ti-pencil"></i>
 							</button>
-							<button type="button" class="btn btn-sm waves-effect waves-light btn-danger delete-btn" id="sa-confirm" data-id="{{$pembayaran->id}}">
+							<button type="button" class="btn btn-sm waves-effect waves-light btn-danger delete-btn" id="sa-confirm" data-id="{{$pembayaran->idPembayaran}}">
 								<i class="ti ti-trash"></i>
 							</button> 
 
@@ -77,6 +90,36 @@
 	</div>
 </div>
 
+<div class="modal fade" id="upload-modal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-sm">
+		<form action="{{ route('upload.bukti') }}" method="POST" enctype="multipart/form-data">
+			@csrf 
+			<div class="modal-content">
+				<div class="modal-header d-flex align-items-center">
+					<h4 class="modal-title" id="myModalLabel">
+						Edit Status 
+					</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body"> 
+					<div class="form-group">
+						<label for="bukti_bayar">Upload Bukti Bayar:</label>
+						<input type="file" class="form-control" name="bukti_bayar" id="bukti_bayar" required>
+					</div>
+					<input type="hidden" name="id_pembayaran" value="{{ $pembayaran->id}}" id="idd_pembayaran"> 
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-light-success text-success font-medium waves-effect">
+						Save
+					</button>
+					<button type="button" class="btn btn-light-danger text-danger font-medium waves-effect" data-bs-dismiss="modal">
+						Close
+					</button>
+				</div>
+			</div> 
+		</form>
+	</div> 
+</div>
 <div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-sm">
 		<form action="POST" id="updateForm">
@@ -107,6 +150,9 @@
 		</form>
 	</div> 
 </div>
+
+
+
 
 <div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-md">
@@ -145,6 +191,22 @@
 												Worker
 											</td>
 											<td id="nama_worker">
+												-
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Status Konsul
+											</td>
+											<td id="statusKonsul">
+												-
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Sharing Session
+											</td>
+											<td id="sharingSession">
 												-
 											</td>
 										</tr>
@@ -189,6 +251,12 @@
 	$(document).ready(function() {
 		$("#zero_config").DataTable();
 		// Saat tombol edit diklik
+		$('.upload-btn').click(function() {
+			let id = $(this).data('id'); // Ambil ID dari data-id tombol
+			
+			$('#idd_pembayaran').val(id);
+			
+		});
 		$('.edit-btn').click(function() {
 			let id = $(this).data('id'); // Ambil ID dari data-id tombol
 			let url = '/pembayaran/' + id; // Buat URL untuk AJAX
@@ -215,13 +283,15 @@
 				url: url,
 				type: 'GET',
 				success: function(response) {  
+					// console.log(response)
 					$('#kode_pembayaran').text(''+response[0].kode_pembayaran);
 					$('#nama_customer').text(''+response[0].nama_customer);
 					$('#nama_worker').text(''+response[0].nama_worker);
+					$('#sharingSession').text(''+response[0].sharingSession);
+					$('#statusKonsul').text(''+response[0].statusKonsul);
 					$('#harga').text('Rp. '+ response[0].harga);
-					img = '{{asset("assets/images/alert/")}}/'+response[0].bukti_bayar; 
-					$('#bukti_pembayaran').attr('src',img);
-					// console.log(response)
+					// img = '{{asset("assets/images/alert/")}}/'+; 
+					$('#bukti_pembayaran').attr('src','storage/'+response[0].bukti_bayar);
 				}
 			});
 		});

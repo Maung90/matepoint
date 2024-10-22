@@ -41,25 +41,23 @@
     <div class="d-flex w-100">
       <div class="min-width-340">
         <div class="border-end user-chat-box h-100">
-          <div class="px-4 pt-9 pb-6 d-none d-lg-block">
-            <form class="position-relative">
-              <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search" />
-              <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-            </form>
+          <div class="px-4 pt-9 pb-6 d-none d-lg-block"> 
           </div>
           <div class="app-chat">
             <ul class="chat-users" style="height: calc(100vh - 400px)" data-simplebar>
-              <li>
-                <a href="javascript:void(0)" class="px-4 py-3 bg-hover-light-black d-flex align-items-center chat-user bg-light" id="chat_user_1" data-user-id="1">
+              @foreach ($users as $talent)
+              <li class="btn-chat" data-id="{{$talent->id}}">
+                <a href="javascript:void(0)" class="px-4 py-3 bg-hover-light-black d-flex align-items-center chat-user bg-light" id="chat_user_1" >
                   <span class="position-relative">
                     <img src="{{ asset('assets/images/profile/user-4.jpg') }}" alt="user-4" width="40" height="40" class="rounded-circle">
                   </span>
                   <div class="ms-6 d-inline-block w-75">
-                    <h6 class="mb-1 fw-semibold chat-title" data-username="James Anderson">Dr. Bonnie Barstow </h6>
-                    <span class="fs-2 text-body-color d-block">barstow@ modernize.com</span>
+                    <h6 class="mb-1 fw-semibold chat-title" data-username="James Anderson">{{$talent->name}} </h6>
+                    <span class="fs-2 text-body-color d-block">{{$talent->email}}</span>
                   </div>
                 </a>
               </li>
+              @endforeach
             </ul>
           </div>
         </div>
@@ -86,33 +84,23 @@
                         <div class="d-flex align-items-center gap-3">
                           <img src="{{ asset('assets/images/profile/user-4.jpg') }}" alt="user4" width="72" height="72" class="rounded-circle" />
                           <div>
-                            <h6 class="fw-semibold fs-4 mb-0">Dr. Bonnie Barstow </h6>
-                            <p class="mb-0">Sales Manager</p>
-                            <p class="mb-0">Digital Arc Pvt. Ltd.</p>
+                            <h6 class="fw-semibold fs-4 mb-0" id="name">Dr. Bonnie Barstow </h6> 
                           </div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-4 mb-7">
                           <p class="mb-1 fs-2">Phone number</p>
-                          <h6 class="fw-semibold mb-0">+1 (203) 3458</h6>
+                          <h6 class="fw-semibold mb-0" id="notelp">+1 (203) 3458</h6>
                         </div>
                         <div class="col-8 mb-7">
                           <p class="mb-1 fs-2">Email address</p>
-                          <h6 class="fw-semibold mb-0">alexandra@modernize.com</h6>
+                          <h6 class="fw-semibold mb-0" id="email">alexandra@modernize.com</h6>
                         </div>
                         <div class="col-12 mb-9">
                           <p class="mb-1 fs-2">Address</p>
-                          <h6 class="fw-semibold mb-0">312, Imperical Arc, New western corner</h6>
-                        </div>
-                        <div class="col-4 mb-7">
-                          <p class="mb-1 fs-2">City</p>
-                          <h6 class="fw-semibold mb-0">New York</h6>
-                        </div>
-                        <div class="col-8 mb-7">
-                          <p class="mb-1 fs-2">Country</p>
-                          <h6 class="fw-semibold mb-0">United Stats</h6>
-                        </div>
+                          <h6 class="fw-semibold mb-0"  id="lokasi">312, Imperical Arc, New western corner</h6>
+                        </div> 
                       </div>
                       <div class="border-bottom pb-7 mb-4">
                         <p class="mb-2 fs-2">Review</p>
@@ -201,7 +189,8 @@
 </div>
 <div class="modal fade" id="bs-example-modal-md" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-sm">
-    <form action="POST" id="updateForm">
+    <form action="{{ route('talent.store') }}" method="POST" id="updateForm">
+      @csrf <!-- Token CSRF untuk proteksi -->
       <div class="modal-content">
         <div class="modal-header d-flex align-items-center">
           <h4 class="modal-title" id="myModalLabel">
@@ -211,32 +200,64 @@
         </div>
         <div class="modal-body">
           <h2 class="fs-3 text-muted text-capitalize">Silahkan bayar biaya konsultasi</h2>
-          <h5 class="text-dark">Rp. 80.000</h5>
+          <h5 class="text-dark" id="harga">Rp. 80.000</h5>
           <div class="row">
             <div class="col-12">
               <img src="{{asset('assets/images/qr.png')}}" alt="">
             </div>
             <div class="col-12">
               <div class="d-flex justify-content-center gap-2">
-               <input type="radio" class="form-check" name="sharingSession" id="offline">
-               <label for="offline" class="fw-bolder text-muted">Offline</label>
-               <input type="radio" id="online" class="form-check" name="sharingSession">
-               <label for="online" class="fw-bolder text-muted">Online</label>
-             </div>
-           </div>
-         </div>
-       </div>
-       <div class="modal-footer">
-        <button type="button" class="btn btn-light-success text-success font-medium waves-effect" id="btnNextModal">
-          Next
-        </button>
-        <button type="button" class="btn btn-light-danger text-danger font-medium waves-effect" data-bs-dismiss="modal">
-          Close
-        </button>
-      </div>
-    </div> 
-  </form>
-</div>  
+                <input type="hidden" name="id_worker" id="id_worker">
+                <input type="hidden" name="id_customer" id="id_customer" value="{{session('user_id')}}">
+                <input type="hidden" name="harga_worker" id="harga_worker">
+                <input type="radio" class="form-check" name="sharingSession" id="offline" value="offline">
+                <label for="offline" class="fw-bolder text-muted">Offline</label>
+                <input type="radio" id="online" class="form-check" name="sharingSession" value="online">
+                <label for="online" class="fw-bolder text-muted">Online</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-light-success text-success font-medium waves-effect" id="btnNextModal">
+            Save
+          </button>
+          <button type="button" class="btn btn-light-danger text-danger font-medium waves-effect" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div> 
+    </form>
+  </div>  
 </div>
 <!-- content -->
 @endsection 
+
+@section('js') 
+
+<script>
+  $('.btn-chat').click(function() {
+      let id = $(this).data('id'); // Ambil ID dari data-id tombol
+      let url = '/talent/get/' + id; // Buat URL untuk AJAX
+      let img = '';
+      // console.log(id)
+      // AJAX request untuk mendapatkan data pembayaran
+      $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(response) {  
+          // console.log(response)
+          $('#name').text(''+response.name);
+          $('#notelp').text(''+response.notelp);
+          $('#email').text(''+response.email);
+          $('#id_worker').val(response.id);
+          $('#harga').text('Rp. '+response.harga);
+          $('#harga_worker').val(response.harga);
+          // img = '/'+response.bukti_bayar; 
+          // $('#bukti_pembayaran').attr('src',img);
+          // console.log(response)
+        }
+      });
+    });
+  </script>
+  @endsection
