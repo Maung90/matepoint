@@ -54,26 +54,26 @@
       </div>
       <div class="app-chat">
         <ul class="chat-users" style="height: calc(100vh - 496px)" data-simplebar>
-            <?php $i = 0; ?>
-            @foreach ($list as $item)
-            <?php $i++; ?>
-            <li>
-                <span class="px-4 py-3 cursor-pointer bg-hover-light-black d-flex align-items-start justify-content-between chat-user bg-light" id="chat_user_{{ $i }}" data-id="{{ $item->customer->id }}">
-                    <div class="d-flex align-items-center">
-                        <span class="position-relative">
-                            <img src="{{ asset('assets/images/profile/user-'.$i.'.jpg') }}" alt="user{{ $i }}" width="48" height="48" class="rounded-circle" />
-                            <span class="bottom-0 p-1 position-absolute end-0 badge rounded-pill bg-success">
-                                <span class="visually-hidden">New alerts</span>
-                            </span>
-                        </span>
-                        <div class="ms-3 d-inline-block w-75">
-                            <h6 class="fw-semibold chat-title" data-username="{{ $item->customer->name }}">{{ $item->customer->name }}</h6>
-                        </div>
-                    </div>
+          <?php $i = 0; ?>
+          @foreach ($list as $item)
+          <?php $i++; ?>
+          <li>
+            <span class="px-4 py-3 cursor-pointer bg-hover-light-black d-flex align-items-start justify-content-between chat-user bg-light" id="chat_user_1" data-id="{{$item->id}}">
+              <div class="d-flex align-items-center">
+                <span class="position-relative">
+                  <img src="{{ asset('assets/images/profile/user-'.$i.'.jpg') }}" alt="user1" width="48" height="48" class="rounded-circle" />
+                  <span class="bottom-0 p-1 position-absolute end-0 badge rounded-pill bg-success">
+                    <span class="visually-hidden">New alerts</span>
+                  </span>
                 </span>
-            </li> 
-            @endforeach
-        </ul>      
+                <div class="ms-3 d-inline-block w-75">
+                  <h6 class="fw-semibold chat-title" data-username="{{ $item->name }}">{{ $item->name }}</h6>
+                </div>
+              </div>
+            </span>
+          </li> 
+          @endforeach
+        </ul>
       </div>
     </div>
     <div class="w-70 w-xs-100 chat-container">
