@@ -61,4 +61,16 @@ class TalentController extends Controller
         return redirect()->back()->with('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
         // return redirect()->route('/list-pembayaran')->with('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('query'); // Ambil input dari permintaan pencarian
+        
+        // Pencarian dalam database menggunakan model
+        $results = User::where('name', 'LIKE', "%{$query}%")
+        ->where('role_id', '=', '3')
+        ->get();
+
+        return response()->json($results); // Kembalikan hasil dalam format JSON
+    }
 }

@@ -38,9 +38,10 @@
 			<!-- Sidebar scroll-->
 			<div>
 				<div class="brand-logo d-flex align-items-center justify-content-between">
-					<a href="/" class="text-nowrap logo-img">
-						<img src="{{ asset('assets/images/logos/dark-logo.svg') }}" class="dark-logo" width="180" alt="" />
-						<img src="{{ asset('assets/images/logos/light-logo.svg') }}" class="light-logo"  width="180" alt="" />
+					<a href="/" class="text-nowrap logo-img d-block px-3 py-3 w-100">
+						<span class="text-primary fs-8 fw-bolder  text-nowrap logo-img d-block w-100">
+							Matepoint
+						</span>
 					</a>
 					<div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
 						<i class="ti ti-x fs-8 text-muted"></i>
@@ -144,9 +145,17 @@
 							<span class="hide-menu">PAGES - pembeli</span>
 						</li>
 						<li class="sidebar-item">
-							<a class="sidebar-link {{ Request::is('/talent') ? 'active' : '' }}" href="/talent" aria-expanded="false">
+							<a class="sidebar-link {{ Request::is('/chat') ? 'active' : '' }}" href="/chat" aria-expanded="false">
 								<span>
 									<i class="ti ti-message-dots"></i>
+								</span>
+								<span class="hide-menu">Chat</span>
+							</a>
+						</li> 
+						<li class="sidebar-item">
+							<a class="sidebar-link {{ Request::is('/talent') ? 'active' : '' }}" href="/talent" aria-expanded="false">
+								<span>
+									<i class="ti ti-stars"></i>
 								</span>
 								<span class="hide-menu">Talent</span>
 							</a>
@@ -154,7 +163,7 @@
 						<li class="sidebar-item">
 							<a class="sidebar-link {{ Request::is('/profesional') ? 'active' : '' }}" href="/profesional" aria-expanded="false">
 								<span>
-									<i class="ti ti-message-dots"></i>
+									<i class="ti ti-school"></i>
 								</span>
 								<span class="hide-menu">Profesional</span>
 							</a>
@@ -195,8 +204,11 @@
 						</li> 
 					</ul> 
 					<div class="d-block d-lg-none">
-						<img src="{{ asset('assets/images/logos/dark-logo.svg') }}" class="dark-logo" width="180" alt="" />
-						<img src="{{ asset('assets/images/logos/light-logo.svg') }}" class="light-logo"  width="180" alt="" />
+						<a href="/" class="text-nowrap logo-img d-block px-4 py-9 w-100">
+							<span class="text-primary fs-8 fw-bolder  text-nowrap logo-img w-100">
+								Matepoint
+							</span>
+						</a>
 					</div>
 					<button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="p-2">

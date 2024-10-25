@@ -102,14 +102,20 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('home');
 
 
+Route::get('/forgot_password', function () {
+    return view('forgot_password');
+})->name('forgot_password');
+
+
 // TALENT
 Route::get('/talent', [TalentController::class, 'getUsersWithRoleIdTwo']);
 Route::get('/talent/get/{id}', [TalentController::class, 'get'])->name('talent.get');
 Route::post('/talent/store', [TalentController::class, 'store'])->name('talent.store');
-
+Route::get('/talent/search', [TalentController::class, 'search'])->name('talent.search');
 
 
 // PROFESIONAL
 Route::get('/profesional', [ProfesionalController::class, 'getUsersWithRoleIdTwo']);
 Route::get('/profesional/get/{id}', [ProfesionalController::class, 'get'])->name('profesional.get');
 Route::post('/profesional/store', [ProfesionalController::class, 'store'])->name('profesional.store');
+Route::get('/profesional/search', [ProfesionalController::class, 'search'])->name('profesional.search');
