@@ -34,6 +34,7 @@
 <div class="card"> 
   <div class="card-body px-4 py-3"> 
     <div class="table-responsive">
+      <div> 
       <table class="table table-bordered" id="zero_config">
         <thead>
           <tr>
@@ -79,6 +80,7 @@
           @endforeach
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </div>
