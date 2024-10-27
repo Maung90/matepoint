@@ -38,7 +38,7 @@
   <div class="d-flex">
     <div class="w-30 d-none d-lg-block border-end user-chat-box">
       <div class="app-chat">
-        <ul class="chat-users" style="height: calc(100vh - 496px)" data-simplebar>
+        <ul class="chat-users" style="height: calc(100vh - 365px)" data-simplebar>
           <?php $i = 0; ?>
           @foreach ($list as $item)
           <?php $i++; ?>
