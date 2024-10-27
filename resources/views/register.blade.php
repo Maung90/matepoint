@@ -14,87 +14,88 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!--  Favicon -->
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.ico') }}" />
-    <!-- Owl Carousel  -->
-    <link rel="stylesheet" href="{{ asset('assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
-    
-    <!-- Core Css -->
     <link  id="themeColors"  rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
 
-    <!-- Custom CSS -->
-    <style>
-        /* Style untuk memastikan halaman daftar center dan responsif */
-        body, html {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8f9fa;
-        }
-        .register-container {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .btn-block {
-            width: 100%;
-        }
-        .text-center p {
-            margin: 0.5rem 0;
-        }
-        /* Media query untuk layar kecil */
-        @media (max-width: 576px) {
-            .register-container {
-                padding: 1.5rem;
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="register-container">
-        <h2 class="text-center">Registrasi</h2>
-        <form action="{{ route('register') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label for="name">Nama:</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email" required>
-            </div>
-            <div class="form-group">
-                <label for="notelp">No Telepon:</label>
-                <input type="text" class="form-control" id="notelp" name="notelp" placeholder="Masukkan no telepon" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
-            </div>
-            <div class="form-group">
-                <label for="password_confirmation">Konfirmasi Password:</label>
-                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi password" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Daftar</button>
-            @if($errors->any())
-                <div class="alert alert-danger mt-2">
-                    {{ $errors->first() }}
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <div class="position-relative overflow-hidden radial-gradient min-vh-100">
+            <div class="position-relative z-index-5">
+                <div class="row">
+                    <div class="col-xl-7 col-xxl-8">
+                        <span class="text-primary fs-8 fw-bolder  text-nowrap logo-img d-block px-4 py-9 w-100">
+                            Matepoint
+                        </span>
+                        <div class="d-none d-xl-flex align-items-center justify-content-center" style="height: calc(100vh - 80px);">
+                            <img src="{{asset('assets/images/backgrounds/login-security.svg')}}" alt="" class="img-fluid" width="500">
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-xxl-4">
+                        <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
+                            <div class="col-sm-8 col-md-6 col-xl-11">
+                                <h2 class="mb-3 fs-7 fw-bolder">Welcome to Modernize</h2>
+                                <p class=" mb-9">Daftar akun disini</p> 
+                                <div class="position-relative text-center my-4">
+                                    <p class="mb-0 fs-4 px-3 d-inline-block bg-white text-dark z-index-5 position-relative"> </p>
+                                    <span class="border-top w-100 position-absolute top-50 start-50 translate-middle"></span>
+                                </div>
+                                <form action="{{ route('register') }}" method="POST">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-12"> 
+                                            <div class="mb-3">
+                                                <label for="exampleInputEmail1" class="form-label">Name</label>
+                                                <input required type="text" class="form-control" name="name" id="exampleInputtext" placeholder="masukan nama" aria-describedby="textHelp">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-md-6 col-sm-12">
+                                            <div class="mb-3">
+                                                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                                                <input required type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="masukan email" aria-describedby="emailHelp">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-md-6 col-sm-12">
+                                            <div class="mb-3">
+                                                <label for="exampleInputEmail1" class="form-label">No Telp</label>
+                                                <input required type="text" minlength="1" maxlength="15" class="form-control" id="exampleInputEmail1" placeholder="masukan no telpon" aria-describedby="emailHelp" name="notelp">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-md-6 col-sm-12">
+                                            <div class="mb-3">
+                                                <label for="exampleInputEmail1" class="form-label">Password</label>
+                                                <input required type="password" class="form-control" id="exampleInputEmail1" placeholder="masukan password" aria-describedby="exampleInputPassword1" name="password">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-md-6 col-sm-12">
+                                            <div class="mb-3">
+                                                <label for="exampleInputEmail1" class="form-label">Konfirmasi Password</label>
+                                                <input required type="password" class="form-control" id="exampleInputEmail1" placeholder="masukan konfirmasi password" aria-describedby="exampleInputPassword1" name="password_confirmation">
+                                            </div>
+                                        </div>
+                                        <div class="col-12"> 
+                                            <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Daftar</button>
+                                            @if($errors->any())
+                                            <div class="alert alert-danger mt-2">
+                                                {{ $errors->first() }}
+                                            </div>
+                                            @endif
+                                            @if(session('success'))
+                                            <div class="alert alert-success mt-2">
+                                                {{ session('success') }}
+                                            </div>
+                                            @endif
+                                            <div class="d-flex align-items-center">
+                                                <p class="fs-4 mb-0 text-dark">Sudah punya akun?</p>
+                                                <a class="text-primary fw-medium ms-2" href="{{route('login')}}">Login disini </a>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            @endif
-            @if(session('success'))
-                <div class="alert alert-success mt-2">
-                    {{ session('success') }}
-                </div>
-            @endif
-        </form>
-        <div class="mt-3 text-center">
-            <p>Sudah punya akun? <a href="{{ route('login') }}">Login disini</a></p>
+            </div>
         </div>
     </div>
 </body>
