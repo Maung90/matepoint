@@ -29,10 +29,10 @@ class ProfesionalController extends Controller
             'id_worker' => 'required|integer',
             'id_customer' => 'required|integer',
             'harga_worker' => 'required|integer',
-            'sharing_session' => 'required|in:offline,online',
+            'sharingSession' => 'required|in:offline,online',
         ]);
         $statusKonsul = "proses"; 
-        $statusBayar = "nonpaid"; 
+        $statusBayar = "unpaid"; 
 
         // Cek kode pembayaran terakhir di database
         $lastPayment = Pembayaran::orderBy('id', 'desc')->first();

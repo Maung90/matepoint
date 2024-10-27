@@ -52,17 +52,23 @@
                           </span>
                       </span>
                       <div class="ms-3 d-inline-block w-75">
-                          @if (auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
-                              <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->customer->name }}">
-                                  {{ $item->pembayaran->customer->name }}
-                              </h6>
-                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->customer->name }}"></span>
-                          @else
-                              <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->worker->name }}">
-                                  {{ $item->pembayaran->worker->name }}
-                              </h6>
+                        @if (auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
+                            <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->customer->name }}">
+                                {{ $item->pembayaran->customer->name }}
+                            </h6>
+                            @if($item->pembayaran->worker->role_id == 3)
                               <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
-                          @endif
+                            @endif
+                        @else
+                            <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->worker->name }}">
+                                {{ $item->pembayaran->worker->name }}
+                            </h6>
+                            @if($item->pembayaran->worker->role_id == 3)
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                            @elseif($item->pembayaran->worker->role_id == 2)
+                              <span class="badge text-bg-primary">Profesional</span>
+                            @endif
+                        @endif
                       </div>
                   </div>
                   <p class="mb-0 fs-2 text-muted" data-transaksi="{{ $item->pembayaran->kode_transaksi }}">{{ $item->pembayaran->kode_pembayaran }}</p>
@@ -87,7 +93,10 @@
         <div class="p-2 botder-top border-bottom chat-meta-user d-flex align-items-center justify-content-end">
           <ul class="mb-0 list-unstyled d-flex align-items-center">
             <li>
-              <span id="refresh-chat" class="px-2 chat-menu text-dark fs-7 bg-hover-primary nav-icon-hover position-relative z-index-5">
+              <span id="end-session" class="px-2 cursor-pointer chat-menu text-dark fs-7 bg-hover-primary nav-icon-hover position-relative z-index-5">
+                <i class="ti ti-message-circle-off"></i>
+              </span>
+              <span id="refresh-chat" class="px-2 cursor-pointer chat-menu text-dark fs-7 bg-hover-primary nav-icon-hover position-relative z-index-5">
                 <i class="ti ti-refresh"></i>
               </span>
             </li>
@@ -140,12 +149,18 @@
                             <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->customer->name }}">
                                 {{ $item->pembayaran->customer->name }}
                             </h6>
-                            <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->customer->name }}"></span>
+                            @if($item->pembayaran->worker->role_id == 3)
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                            @endif
                         @else
                             <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->worker->name }}">
                                 {{ $item->pembayaran->worker->name }}
                             </h6>
-                            <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                            @if($item->pembayaran->worker->role_id == 3)
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                            @elseif($item->pembayaran->worker->role_id == 2)
+                              <span class="badge text-bg-primary">Profesional</span>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -232,9 +247,56 @@
       $('#refresh-chat').click(function() {
         let id = $('#uuid_sharing').val();
         if (id) {
-            loadMessages(id);
+          loadMessages(id);
+        } else {
+          toastr.error('Silahkan pilih pesan terlebih dahulu.');
         }
-    });
+      });
+
+      $('#end-session').click(function() {
+          let id = $('#uuid_sharing').val();
+          if (id) {
+              Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes!",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  $.ajax({
+                      url: '{{ route("message.end_session", ":id") }}'.replace(':id', id),
+                      type: 'PUT',
+                      data: {
+                          "_token": "{{ csrf_token() }}"  // Sertakan CSRF token untuk keamanan
+                      },
+                      success: function(response) {
+                          Swal.fire({
+                              title: "Success!",
+                              text: response.message,
+                              icon: "success",
+                              confirmButtonText: "OK"
+                          }).then(() => {
+                              location.reload();  
+                          });
+                      },
+                      error: function(response) {
+                          Swal.fire({
+                              title: "Error!",
+                              text: response.responseJSON.message || "An error occurred",
+                              icon: "error",
+                              confirmButtonText: "OK"
+                          });
+                      }
+                  });
+                }
+              });
+          } else {
+            toastr.error('Silahkan pilih pesan terlebih dahulu.');
+          }
+      });
   });
   
   @if(isset($id))

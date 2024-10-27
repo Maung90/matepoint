@@ -199,19 +199,14 @@
 													<!-- Menampilkan role user dari relasi dengan tabel roles -->
 													<span class="mb-1 d-block text-dark">{{ Auth::user()->role->role }}</span>
 													<!-- Menampilkan email user -->
-													<p class="mb-0 d-flex text-dark align-items-center gap-2">
+													<p class="gap-2 mb-0 d-flex text-dark align-items-center">
 														<i class="ti ti-mail fs-4"></i> {{ Auth::user()->email }}
 													</p>
 												</div>
-<<<<<<< HEAD
-											</div> 
-											<div class="py-4 pt-8 d-grid px-7"> 
-												<form action="{{ route('logout') }}" method="POST">
-=======
 											</div>
 											<div class="message-body">
-												<a href="{{ url('/profile') }}" class="py-8 px-7 mt-8 d-flex align-items-center">
-													<span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
+												<a href="{{ url('/profile') }}" class="py-8 mt-8 px-7 d-flex align-items-center">
+													<span class="p-6 d-flex align-items-center justify-content-center bg-light rounded-1">
 														<img src="{{ asset('assets/images/svgs/icon-account.svg') }}" alt="" width="24" height="24">
 													</span>
 													<div class="w-75 d-inline-block v-middle ps-3">
@@ -220,7 +215,7 @@
 													</div>
 												</a>
 												<a href="{{ url('/email') }}" class="py-8 px-7 d-flex align-items-center">
-													<span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
+													<span class="p-6 d-flex align-items-center justify-content-center bg-light rounded-1">
 														<img src="{{ asset('assets/images/svgs/icon-inbox.svg') }}" alt="" width="24" height="24">
 													</span>
 													<div class="w-75 d-inline-block v-middle ps-3">
@@ -229,9 +224,8 @@
 													</div>
 												</a>
 											</div>
-											<div class="d-grid py-4 px-7 pt-8"> 
+											<div class="py-4 pt-8 d-grid px-7"> 
 												<form action="{{ route('logout') }}" method="POST" style="display: inline;">
->>>>>>> e9fa1de89091e71a3ff8b36667436e8c2e747fb9
 													@csrf
 													<button type="submit" class="btn btn-outline-primary">Logout</button>
 												</form>
@@ -264,11 +258,8 @@
 	<script src="{{ asset('assets/js/app-style-switcher.js') }}"></script>
 	<script src="{{ asset('assets/js/sidebarmenu.js') }}"></script>
 	<script src="{{ asset('assets/js/custom.js') }}"></script>
-<<<<<<< HEAD
 	<script src="{{ asset('assets/libs/prismjs/prism.js') }}"></script> 
 	<script src="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.min.js') }}"></script>
-=======
->>>>>>> e9fa1de89091e71a3ff8b36667436e8c2e747fb9
 	<!--  current page js files -->
 	<script src="{{ asset('assets/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script>
 	<!-- <script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script> -->

@@ -60,6 +60,7 @@ Route::prefix('chat')->controller(MessageController::class)->middleware('auth')-
     Route::get('/{id}', 'view')->name('message.view');
     Route::get('detail/{id}', 'detail')->name('message.detail');
     Route::post('create/{id}', 'create')->name('message.create');
+    Route::put('end_session/{id}', 'end_session')->name('message.end_session');
 });
 
 

@@ -103,10 +103,12 @@ class MessageController extends Controller
             }
 
             if (\Carbon\Carbon::parse($sharing->expired_at)->lessThan(now())) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Session Sharing sudah berakhir.'
-                ], 404);
+                if ($sharing->pembayaran->worker->role_id == 3) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Session Sharing sudah berakhir.'
+                    ], 404);
+                }
             }
 
             if ($this->user->role_id !== 2 && $this->user->role_id !== 3) {
@@ -134,4 +136,22 @@ class MessageController extends Controller
         }
     }
 
+    public function end_session($id)
+    {
+        try {
+            $sharing = SharingSession::where('uuid', $id)->first();
+            $sharing->update([
+                'expired_at' => now()
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Sharing Session telah selesai.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
