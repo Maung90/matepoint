@@ -6,15 +6,16 @@ use App\Models\User;
 use App\Models\Message;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Models\SharingSession;
 use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-    private $id_pengirim;
+    private $user;
 
     public function __construct()
     { 
-        $this->id_pengirim = session('user_id'); 
+        $this->user = Auth::user(); 
     }
 
     public function view($id = null)
@@ -22,25 +23,32 @@ class MessageController extends Controller
         if ($id) {
             $messages = Message::with('pengirim', 'penerima')
             ->where(function ($query) use ($id) {
-                $query->where('id_pengirim', $this->id_pengirim)
+                $query->where('id_pengirim', $this->user->id)
                 ->where('id_penerima', $id);
             })
             ->orWhere(function ($query) use ($id) {
                 $query->where('id_pengirim', $id)
-                ->where('id_penerima', $this->id_pengirim);
+                ->where('id_penerima', $this->user->id);
             })
             ->orderBy('created_at', 'asc')
             ->get();
         } else {
             $messages = Message::with('pengirim', 'penerima')
-            ->where('id_pengirim', $this->id_pengirim)
+            ->where('id_pengirim', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->get();
         }
-
-        $list = Message::getChatUsers($this->id_pengirim);
-        // $list = Pembayaran::with('customer')->where('id_customer', $this->id_pengirim)->get();
-
+        
+        if ($this->user->role_id !== 2 && $this->user->role_id !== 3) {
+            $list = SharingSession::whereHas('pembayaran', function ($query) {
+                $query->where('id_customer', $this->user->id);
+            })->with('pembayaran.customer')->get();
+        } else {
+            $list = SharingSession::whereHas('pembayaran', function ($query) {
+                $query->where('id_worker', $this->user->id);
+            })->with('pembayaran.customer')->get();
+        }
+        
         return view('message', compact('messages', 'list', 'id'));
     }
 
@@ -49,13 +57,8 @@ class MessageController extends Controller
     {
         try {
             $messages = Message::with('pengirim', 'penerima')
-            ->where(function ($query) use ($id) {
-                $query->where('id_pengirim', $this->id_pengirim)
-                ->where('id_penerima', $id);
-            })
-            ->orWhere(function ($query) use ($id) {
-                $query->where('id_pengirim', $id)
-                ->where('id_penerima', $this->id_pengirim);
+            ->whereHas('sharingSession', function ($query) use ($id) {
+                $query->where('uuid', $id);
             })
             ->orderBy('created_at', 'desc')
             ->get()
@@ -90,25 +93,33 @@ class MessageController extends Controller
                 ], 404);
             }
 
-            $checkTrx = Pembayaran::where('id_worker', $id)->where('id_customer', $this->id_pengirim)->first();
-            if (!$checkTrx) {
+            $sharing = SharingSession::where('uuid', $id)->with('pembayaran.customer')->first();
+
+            if (!$sharing) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Tidak dapat meminta Konsultasi.'
+                    'message' => 'Session Sharing tidak ditemukan.'
                 ], 404);
             }
 
-            if (!User::find($id)) {
+            if (\Carbon\Carbon::parse($sharing->expired_at)->lessThan(now())) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Penerima tidak ditemukan dalam sistem.'
+                    'message' => 'Session Sharing sudah berakhir.'
                 ], 404);
+            }
+
+            if ($this->user->role_id !== 2 && $this->user->role_id !== 3) {
+                $penerima = $sharing->pembayaran->worker->id;
+            } else {
+                $penerima = $sharing->pembayaran->customer->id;
             }
 
             Message::create([
-                'id_penerima' => $id,
-                'id_pengirim' => $this->id_pengirim,
-                'body' => $request->body
+                'id_penerima' => $penerima,
+                'id_pengirim' => $this->user->id,
+                'body' => $request->body,
+                'id_sharing' => $sharing->id
             ]);
 
             return response()->json([

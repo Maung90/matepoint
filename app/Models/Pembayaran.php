@@ -12,8 +12,8 @@ class Pembayaran extends Model
         'harga',
         'bukti_bayar',
         'status_bayar',
-        'sharingSession',
-        'statusKonsul',
+        'sharing_session',
+        'status_konsul',
         'id_customer',
         'id_worker',
     ];
@@ -21,5 +21,10 @@ class Pembayaran extends Model
     public function customer()
     {
         return $this->belongsTo(User::class, 'id_customer');
+    }
+
+    public function worker()
+    {
+        return $this->belongsTo(User::class, 'id_worker');
     }
 }

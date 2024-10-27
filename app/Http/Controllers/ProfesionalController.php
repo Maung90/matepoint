@@ -29,7 +29,7 @@ class ProfesionalController extends Controller
             'id_worker' => 'required|integer',
             'id_customer' => 'required|integer',
             'harga_worker' => 'required|integer',
-            'sharingSession' => 'required|in:offline,online',
+            'sharing_session' => 'required|in:offline,online',
         ]);
         $statusKonsul = "proses"; 
         $statusBayar = "nonpaid"; 
@@ -51,9 +51,9 @@ class ProfesionalController extends Controller
             'id_worker' => $request->id_worker,
             'id_customer' => $request->id_customer,
             'harga' => $request->harga_worker,
-            'sharingSession' => $request->sharingSession,
+            'sharing_session' => $request->sharingSession,
             'kode_pembayaran' => $kodePembayaran,
-            'statusKonsul' => $statusKonsul,
+            'status_konsul' => $statusKonsul,
             'status_bayar' => $statusBayar,
         ]);
        // return $proses;

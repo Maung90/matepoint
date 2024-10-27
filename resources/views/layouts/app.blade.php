@@ -16,6 +16,7 @@
 	<link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.ico') }}" />
 	<!-- Owl Carousel  -->
 	<link rel="stylesheet" href="{{ asset('assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.min.css') }}">
 
 	<!-- Core Css -->
 	<link  id="themeColors"  rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
@@ -42,7 +43,7 @@
 						<img src="{{ asset('assets/images/logos/dark-logo.svg') }}" class="dark-logo" width="180" alt="" />
 						<img src="{{ asset('assets/images/logos/light-logo.svg') }}" class="light-logo"  width="180" alt="" />
 					</a>
-					<div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+					<div class="cursor-pointer close-btn d-lg-none d-block sidebartoggler" id="sidebarCollapse">
 						<i class="ti ti-x fs-8 text-muted"></i>
 					</div>
 				</div>
@@ -198,7 +199,7 @@
 						<img src="{{ asset('assets/images/logos/dark-logo.svg') }}" class="dark-logo" width="180" alt="" />
 						<img src="{{ asset('assets/images/logos/light-logo.svg') }}" class="light-logo"  width="180" alt="" />
 					</div>
-					<button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<button class="p-0 border-0 navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="p-2">
 							<i class="ti ti-dots fs-7"></i>
 						</span>
@@ -208,7 +209,7 @@
 							<span href="javascript:void(0)" class="nav-link d-flex d-lg-none align-items-center justify-content-center"  >
 								<i class="fs-7"></i>
 							</span>
-							<ul class="navbar-nav flex-row ms-auto align-items-center justify-content-center">
+							<ul class="flex-row navbar-nav ms-auto align-items-center justify-content-center">
 								<li class="nav-item dropdown">
 									<a class="nav-link pe-0" href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown" aria-expanded="false">
 										<div class="d-flex align-items-center">
@@ -219,7 +220,7 @@
 									</a>
 									<div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop1">
 										<div class="profile-dropdown position-relative" data-simplebar>
-											<div class="py-3 px-7 pb-0">
+											<div class="py-3 pb-0 px-7">
 												<h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
 											</div>
 											<div class="d-flex align-items-center py-9 mx-7 border-bottom">
@@ -230,7 +231,7 @@
 													</h5> 
 												</div>
 											</div> 
-											<div class="d-grid py-4 px-7 pt-8"> 
+											<div class="py-4 pt-8 d-grid px-7"> 
 												<form action="{{ route('logout') }}" method="POST">
 													@csrf
 													<button type="submit" class="btn btn-outline-primary">Logout</button>
@@ -266,6 +267,7 @@
 	<script src="{{ asset('assets/js/sidebarmenu.js') }}"></script>
 	<script src="{{ asset('assets/js/custom.js') }}"></script>
 	<script src="{{ asset('assets/libs/prismjs/prism.js') }}"></script> 
+	<script src="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 	<!--  current page js files -->
 	<!-- <script src="{{ asset('assets/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script> -->
 	<!-- <script src="{{ asset('assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script> -->

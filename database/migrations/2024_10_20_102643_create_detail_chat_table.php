@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_chat', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('chat_id');
-            $table->foreign('chat_id')->references('id')->on('chat')->onDelete('cascade'); 
-            $table->text('isi_chat');
-            $table->string('status');
-            $table->timestamps();
-        });
+        // Schema::create('detail_chat', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('chat_id');
+        //     $table->foreign('chat_id')->references('id')->on('chat')->onDelete('cascade'); 
+        //     $table->text('isi_chat');
+        //     $table->string('status');
+        //     $table->timestamps();
+        // });
     }
 
     /**

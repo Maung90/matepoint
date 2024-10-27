@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chat', function (Blueprint $table) {
-            $table->id(); 
-            $table->unsignedBigInteger('id_pengirim');
-            $table->foreign('id_pengirim')->references('id')->on('users')->onDelete('cascade'); 
-            $table->unsignedBigInteger('id_penerima');
-            $table->foreign('id_penerima')->references('id')->on('users')->onDelete('cascade'); 
-            $table->timestamps();
-        });
+        // Schema::create('chat', function (Blueprint $table) {
+        //     $table->id(); 
+        //     $table->unsignedBigInteger('id_pengirim');
+        //     $table->foreign('id_pengirim')->references('id')->on('users')->onDelete('cascade'); 
+        //     $table->unsignedBigInteger('id_penerima');
+        //     $table->foreign('id_penerima')->references('id')->on('users')->onDelete('cascade'); 
+        //     $table->timestamps();
+        // });
     }
 
     /**

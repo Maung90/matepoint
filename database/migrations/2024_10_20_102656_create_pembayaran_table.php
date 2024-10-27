@@ -14,12 +14,15 @@ return new class extends Migration
         Schema::create('pembayaran', function (Blueprint $table) {
             $table->id();
             $table->string('kode_pembayaran');
-            $table->string('bukti_bayar');
+            $table->longText('bukti_bayar')->nullable();
             $table->string('status_bayar');
             $table->unsignedBigInteger('id_customer');
             $table->foreign('id_customer')->references('id')->on('users')->onDelete('cascade'); 
             $table->unsignedBigInteger('id_worker');
             $table->foreign('id_worker')->references('id')->on('users')->onDelete('cascade'); 
+            $table->double('harga');
+            $table->enum('sharing_session', ['offline','online']);
+            $table->enum('status_konsul', ['pending','proses','sukses','batal']);
             $table->timestamps();
         });
     }

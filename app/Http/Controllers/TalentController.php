@@ -15,6 +15,7 @@ class TalentController extends Controller
     // Mengembalikan view dengan data users
         return view('talent', compact('users'));
     }
+    
     public function get($id)
     {
         $talent = User::where('id', $id)->first(); 
@@ -29,10 +30,10 @@ class TalentController extends Controller
             'id_worker' => 'required|integer',
             'id_customer' => 'required|integer',
             'harga_worker' => 'required|integer',
-            'sharingSession' => 'required|in:offline,online',
+            'sharing_session' => 'required|in:offline,online',
         ]);
-        $statusKonsul = "proses"; 
-        $statusBayar = "nonpaid"; 
+        $statusKonsul = "proses";
+        $statusBayar = "unpaid"; 
 
         // Cek kode pembayaran terakhir di database
         $lastPayment = Pembayaran::orderBy('id', 'desc')->first();
@@ -51,9 +52,9 @@ class TalentController extends Controller
             'id_worker' => $request->id_worker,
             'id_customer' => $request->id_customer,
             'harga' => $request->harga_worker,
-            'sharingSession' => $request->sharingSession,
+            'sharing_session' => $request->sharing_session,
             'kode_pembayaran' => $kodePembayaran,
-            'statusKonsul' => $statusKonsul,
+            'status_konsul' => $statusKonsul,
             'status_bayar' => $statusBayar,
         ]);
        // return $proses;
