@@ -139,14 +139,20 @@ class MessageController extends Controller
     public function end_session($id)
     {
         try {
-            $sharing = SharingSession::where('uuid', $id)->first();
-            $sharing->update([
-                'expired_at' => now()
-            ]);
+            if ($this->user->role_id == 4) {
+                $sharing = SharingSession::where('uuid', $id)->first();
+                $sharing->update([
+                    'expired_at' => now()
+                ]);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Sharing Session telah selesai.'
+                ], 200);
+            }
             return response()->json([
                 'status' => true,
-                'message' => 'Sharing Session telah selesai.'
-            ], 200);
+                'message' => 'Hanya pihak customer yang bisa mengakhiri sharing session.'
+            ], 400);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
