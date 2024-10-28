@@ -30,10 +30,6 @@
     <button class="btn btn-primary d-flex" type="button" data-bs-toggle="offcanvas" data-bs-target="#chat-sidebar" aria-controls="chat-sidebar">
       <i class="ti ti-menu-2 fs-5"></i>
     </button>
-    <form class="position-relative w-100">
-      <input type="text" class="py-2 form-control search-chat ps-5" id="text-srh" placeholder="Search Contact">
-      <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-    </form>
   </div>
   <div class="d-flex">
     <div class="w-30 d-none d-lg-block border-end user-chat-box">
@@ -57,16 +53,16 @@
                                 {{ $item->pembayaran->customer->name }}
                             </h6>
                             @if($item->pembayaran->worker->role_id == 3)
-                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-konsul="{{ $item->pembayaran->status_konsul }}"></span>
                             @endif
                         @else
-                            <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->worker->name }}">
+                            <h6 class="fw-semibold chat-title" data-konsul="{{ $item->pembayaran->status_konsul }}">
                                 {{ $item->pembayaran->worker->name }}
                             </h6>
                             @if($item->pembayaran->worker->role_id == 3)
-                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-konsul="{{ $item->pembayaran->status_konsul }}"></span>
                             @elseif($item->pembayaran->worker->role_id == 2)
-                              <span class="badge text-bg-primary">Profesional</span>
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="profesional" data-konsul="{{ $item->pembayaran->status_konsul }}">Profesional</span>
                             @endif
                         @endif
                       </div>
@@ -150,16 +146,16 @@
                                 {{ $item->pembayaran->customer->name }}
                             </h6>
                             @if($item->pembayaran->worker->role_id == 3)
-                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-konsul="{{ $item->pembayaran->status_konsul }}"></span>
                             @endif
                         @else
-                            <h6 class="fw-semibold chat-title" data-username="{{ $item->pembayaran->worker->name }}">
+                            <h6 class="fw-semibold chat-title" data-konsul="{{ $item->pembayaran->status_konsul }}">
                                 {{ $item->pembayaran->worker->name }}
                             </h6>
                             @if($item->pembayaran->worker->role_id == 3)
-                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-username="{{ $item->pembayaran->worker->name }}"></span>
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="{{ $item->expired_at }}" data-konsul="{{ $item->pembayaran->status_konsul }}"></span>
                             @elseif($item->pembayaran->worker->role_id == 2)
-                              <span class="badge text-bg-primary">Profesional</span>
+                              <span class="badge text-bg-primary" id="countdown-expired" data-expired="profesional" data-konsul="{{ $item->pembayaran->status_konsul }}">Profesional</span>
                             @endif
                         @endif
                     </div>
@@ -224,6 +220,7 @@
       const countdown = () => {
           $('.badge#countdown-expired').each(function() {
               let expired = $(this).data('expired');
+              let konsul = $(this).data('konsul');
               let now = Math.floor(Date.now() / 1000);
               let remainingTime = expired - now;
 
@@ -233,7 +230,11 @@
                   let seconds = remainingTime % 60;
                   
                   $(this).text(`${hours} : ${minutes} : ${seconds}`);
-                } else {
+              } else if(konsul == "sukses") {
+                  $(this).removeClass('text-bg-primary');
+                  $(this).addClass('text-bg-danger');
+                  $(this).text(`Sesi Berakhir`);
+              } else if (remainingTime < 0) {
                   $(this).removeClass('text-bg-primary');
                   $(this).addClass('text-bg-danger');
                   $(this).text(`Sesi Berakhir`);
@@ -257,8 +258,8 @@
           let id = $('#uuid_sharing').val();
           if (id) {
               Swal.fire({
-                  title: "Are you sure?",
-                  text: "You won't be able to revert this!",
+                  title: "Kamu yakin mengakhiri sesi?",
+                  text: "Anda tidak dapat melanjutkan pesan!",
                   icon: "warning",
                   showCancelButton: true,
                   confirmButtonColor: "#3085d6",

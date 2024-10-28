@@ -12,7 +12,7 @@ class ProfesionalController extends Controller
         // Mengambil semua user dengan role_id = 2
         $users = User::where('role_id', 2)->get();
 
-    // Mengembalikan view dengan data users
+        // Mengembalikan view dengan data users
         return view('profesional', compact('users'));
     }
     public function get($id)
@@ -23,18 +23,13 @@ class ProfesionalController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        // Validasi input dari form
         $request->validate([
             'id_worker' => 'required|integer',
             'id_customer' => 'required|integer',
             'harga_worker' => 'required|integer',
-            'sharingSession' => 'required|in:offline,online',
+            'sharing_session' => 'required|in:offline,online',
         ]);
-        $statusKonsul = "proses"; 
-        $statusBayar = "unpaid"; 
 
-        // Cek kode pembayaran terakhir di database
         $lastPayment = Pembayaran::orderBy('id', 'desc')->first();
 
         if ($lastPayment) { 
@@ -46,30 +41,32 @@ class ProfesionalController extends Controller
             $kodePembayaran = 'TRX001';
         }
 
-        // Simpan data ke database dengan kode pembayaran yang baru
-        $proses = Pembayaran::create([
+        Pembayaran::create([
             'id_worker' => $request->id_worker,
             'id_customer' => $request->id_customer,
             'harga' => $request->harga_worker,
-            'sharing_session' => $request->sharingSession,
+            'sharing_session' => $request->sharing_session,
             'kode_pembayaran' => $kodePembayaran,
-            'status_konsul' => $statusKonsul,
-            'status_bayar' => $statusBayar,
+            'status_konsul' => "proses",
+            'status_bayar' => "unpaid",
         ]);
-       // return $proses;
-        // Redirect atau kembali dengan pesan sukses 
-        return redirect()->back()->with('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
-        // return redirect()->route('/list-pembayaran')->with('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
+        
+        session()->flash('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
+        return redirect()->back();
     }
+
     public function search(Request $request)
     {
-        $query = $request->get('query'); // Ambil input dari permintaan pencarian
+        $query = $request->get('query');
         
-        // Pencarian dalam database menggunakan model
-        $results = User::where('name', 'LIKE', "%{$query}%")
-        ->where('role_id', '=', '2')
-        ->get();
-
-        return response()->json($results); // Kembalikan hasil dalam format JSON
+        $results = User::where('role_id', '2')->get();
+        
+        if ($query) {
+            $results = User::where('name', 'LIKE', "%{$query}%")
+            ->where('role_id', '=', '2')
+            ->get();
+        }
+        
+        return response()->json($results);
     }
 }

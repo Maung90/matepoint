@@ -27,6 +27,7 @@ class PembayaranController extends Controller
         return view('pembayaran');
     }
 
+
     public function viewCustomer()
     {
         return view('bayarCustomer');
@@ -71,13 +72,13 @@ class PembayaranController extends Controller
                     <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-primary upload-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#upload-modal">
                         <i class="ti ti-upload"></i>
                     </button>
-                    <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-warning edit-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#edit-modal">
-                        <i class="ti ti-pencil"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm waves-effect waves-light btn-danger delete-btn" id="sa-confirm" data-id="'.$row->id.'">
-                        <i class="ti ti-trash"></i>
-                    </button>
                 ';
+                // <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-warning edit-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#edit-modal">
+                //     <i class="ti ti-pencil"></i>
+                // </button>
+                // <button type="button" class="btn btn-sm waves-effect waves-light btn-danger delete-btn" id="sa-confirm" data-id="'.$row->id.'">
+                //     <i class="ti ti-trash"></i>
+                // </button>
             })
             ->rawColumns(['status_konsul', 'sharing_session', 'status_bayar', 'action'])
             ->make(true);
@@ -101,7 +102,7 @@ class PembayaranController extends Controller
         $validate = $request->validate([
             'status_bayar' => 'required|in:paid,unpaid',
             'sharing_session' => 'required|in:online,offline',
-            'status_konsul' => 'required|in:pending,proses,sukses,batal',
+            'status_konsul' => 'required|in:proses,sukses',
         ]);
 
         $pembayaran = Pembayaran::find($id);
@@ -155,43 +156,38 @@ class PembayaranController extends Controller
         }
     }
 
-    public function uploadBukti(Request $request)
+    public function uploadBukti(Request $request, $id)
     {
-        // Validasi file
         $validator = Validator::make($request->all(), [
-            'bukti_bayar' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048', // Maksimal 2MB
-            'id_pembayaran' => 'required|integer|exists:pembayaran,id', // Validasi ID pembayaran
+            'bukti_bayar' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return response()->json([
+                'message' => $validator->errors()
+            ], 422);
         }
 
-        // Temukan pembayaran yang ingin di-update
-        $pembayaran = Pembayaran::find($request->id_pembayaran);
+        $pembayaran = Pembayaran::find($id);
 
-        if ($pembayaran) {
-            // Upload file
+        if (!$pembayaran) {
+            return response()->json(['message' => 'Data not found.'], 404);
+        }
+
+        try {
             $file = $request->file('bukti_bayar');
-            // Pastikan menggunakan store untuk menyimpan di folder public
-            $path = $file->store('uploads/bukti_bayar', 'public'); // Menyimpan file di folder public/uploads/bukti_bayar
-            
-            // Hapus file lama jika ada
+            $path = $file->store('uploads/bukti_bayar', 'public');
+
             if ($pembayaran->bukti_bayar) {
                 Storage::disk('public')->delete($pembayaran->bukti_bayar);
             }
 
-            // Update path bukti bayar di database
-            $pembayaran->bukti_bayar = $path; // Update kolom bukti_bayar
-            $pembayaran->save(); // Simpan perubahan
+            $pembayaran->bukti_bayar = $path;
+            $pembayaran->save();
 
-            // Redirect dengan pesan sukses
-            return redirect()->back()->with('success', 'Bukti bayar berhasil di-upload.');
+            return response()->json(['message' => 'File uploaded successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'File upload failed.', 'error' => $e->getMessage()], 500);
         }
-
-        // Jika pembayaran tidak ditemukan, kembalikan dengan error
-        return redirect()->back()->with('error', 'Pembayaran tidak ditemukan.');
     }
-
-
 }

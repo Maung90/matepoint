@@ -57,8 +57,9 @@
 
 <div class="modal fade" id="upload-modal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-md">
-    <form action="{{ route('upload.bukti') }}" method="POST" enctype="multipart/form-data">
-      @csrf 
+    <form id="upload-bukti" method="POST" enctype="multipart/form-data">
+      @csrf
+      @method('put') 
       <div class="modal-content">
         <div class="modal-header d-flex align-items-center">
           <h4 class="modal-title" id="myModalLabel">
@@ -128,9 +129,17 @@
                     </tr>
                     <tr>
                       <td>
+                        Status Pembayaran
+                      </td>
+                      <td id="statusPembayaran" class="text-capitalize">
+                        -
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
                         Status Konsul
                       </td>
-                      <td id="statusKonsul">
+                      <td id="statusKonsul" class="text-capitalize">
                         -
                       </td>
                     </tr>
@@ -138,7 +147,7 @@
                       <td>
                         Sharing Session
                       </td>
-                      <td id="sharingSession">
+                      <td id="sharingSession" class="text-capitalize">
                         -
                       </td>
                     </tr>
@@ -154,7 +163,7 @@
                 </div>
                 <div class="col-12">
                   <span class="text-muted">Bukti Pembayaran : </span>
-                  <img src="{{asset('dist/images/apps/app-email.jpg')}}" id="bukti_pembayaran" alt="bukti pembayaran" class="img-fluid">
+                  <img src="https://penerbitininnawa.id/assets/admin/img/default.png" id="bukti_pembayaran" alt="bukti pembayaran" class="img-fluid">
                 </div>
               </div>
             </div>
@@ -220,11 +229,13 @@
 <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script>
 $(document).ready(function() {
+    // Event handler for upload button
     $(document).on('click', '.upload-btn', function() {
         let id = $(this).data('id');
         $('#idd_pembayaran').val(id);
     });
 
+    // DataTables initialization
     $('#datatables').DataTable({
         processing: true,
         serverSide: true,
@@ -242,20 +253,26 @@ $(document).ready(function() {
         ]
     });
 
+    // Event handler for info button
     $(document).on('click', '.info-btn', function() {
         let id = $(this).data('id');
         $.ajax({
             url: '{{ route("pembayaran.get", ":id") }}'.replace(':id', id),
             type: 'GET',
             success: function(response) {
-                response = response[0];
-                $('#kode_pembayaran').text(response.kode_pembayaran);
-                $('#nama_customer').text(response.customer.name);
-                $('#nama_worker').text(response.worker.name);
-                $('#sharingSession').text(response.sharing_session);
-                $('#statusKonsul').text(response.status_konsul);
-                $('#harga').text('Rp. ' + parseInt(response.harga).toLocaleString('id-ID'));
-                $('#bukti_pembayaran').attr('src', 'storage/' + response.bukti_bayar);
+                let data = response[0];
+                $('#kode_pembayaran').text(data.kode_pembayaran);
+                $('#nama_customer').text(data.customer.name);
+                $('#nama_worker').text(data.worker.name);
+                $('#statusPembayaran').text(data.status_bayar);
+                $('#sharingSession').text(data.sharing_session);
+                $('#statusKonsul').text(data.status_konsul);
+                $('#harga').text('Rp. ' + parseInt(data.harga).toLocaleString('id-ID'));
+                if (data.bukti_bayar) {
+                  $('#bukti_pembayaran').attr('src', 'storage/' + data.bukti_bayar);
+                } else {
+                  $('#bukti_pembayaran').attr('src', 'https://penerbitininnawa.id/assets/admin/img/default.png');
+                }
 
                 $('#info-modal').modal('show');
             },
@@ -265,23 +282,23 @@ $(document).ready(function() {
         });
     });
 
+    // Event handler for edit button
     $(document).on('click', '.edit-btn', function() {
-        var id = $(this).data('id');
+        let id = $(this).data('id');
         $.ajax({
             url: '{{ route("pembayaran.get", ":id") }}'.replace(':id', id),
             type: 'GET',
             success: function(response) {
-                response = response[0];
+                let data = response[0];
 
-                $('#update_status_bayar').val(response.status_bayar);
-                $('#update_sharing_status').val(response.sharing_status);
-                $('#update_status_konsul').val(response.status_konsul);
+                $('#update_status_bayar').val(data.status_bayar);
+                $('#update_sharing_status').val(data.sharing_status);
+                $('#update_status_konsul').val(data.status_konsul);
 
-                let updateUrl = `{{ route('pembayaran.update', ':id') }}`.replace(':id', id);
+                let updateUrl = '{{ route("pembayaran.update", ":id") }}'.replace(':id', id);
                 $('#update').attr('action', updateUrl);
-                
-                $('#edit-modal').modal('show');
 
+                $('#edit-modal').modal('show');
             },
             error: function(xhr, status, error) {
                 console.error("Error fetching data:", error);
@@ -289,16 +306,37 @@ $(document).ready(function() {
         });
     });
 
-    $('#update').submit(function(e) {
+    // Event handler for upload button
+    $(document).on('click', '.upload-btn', function() {
+        let id = $(this).data('id');
+        $.ajax({
+            url: '{{ route("pembayaran.get", ":id") }}'.replace(':id', id),
+            type: 'GET',
+            success: function(response) {
+                let updateUrl = '{{ route("upload.bukti", ":id") }}'.replace(':id', id);
+                $('#upload-bukti').attr('action', updateUrl);
+
+                $('#upload-modal').modal('show');
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching data:", error);
+            }
+        });
+    });
+    
+    $('#upload-bukti').submit(function(e) {
       e.preventDefault();
       let actionUrl = $(this).attr('action');
-      
+      let formData = new FormData(this);
+
       $.ajax({
           url: actionUrl,
           type: 'POST',
-          data: $(this).serialize(),
+          data: formData,
+          contentType: false,
+          processData: false,
           success: function(response) {
-              $('#edit-modal').modal('hide');
+              $('#upload-modal').modal('hide');
               $('#datatables').DataTable().ajax.reload();
               Swal.fire({
                   title: 'Success!',
@@ -309,60 +347,100 @@ $(document).ready(function() {
           },
           error: function(xhr, status, error) {
               console.error("Error updating data:", error);
+              let errorMessage = "There was an error uploading data.";
+              if (xhr.status === 422) {
+                  let errors = xhr.responseJSON.message;
+                  errorMessage = '<ul>';
+                  $.each(errors, function(key, messages) {
+                      errorMessage += '<li>' + messages.join(', ') + '</li>';
+                  });
+                  errorMessage += '</ul>';
+              }
               Swal.fire({
                   title: 'Error!',
-                  text: response.message,
+                  html: errorMessage,
                   icon: 'error',
                   confirmButtonText: 'OK'
               });
           }
       });
-  });
+    });
 
-  $(document).on('click', '.delete-btn', function() {
-      let id = $(this).data('id');
-      let deleteUrl = `{{ route('pembayaran.destroy', ':id') }}`.replace(':id', id);
+    // Form submission handler for update
+    $('#update').submit(function(e) {
+        e.preventDefault();
+        let actionUrl = $(this).attr('action');
 
-      Swal.fire({
-          title: 'Are you sure?',
-          text: "This action cannot be undone!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-          if (result.isConfirmed) {
-              $.ajax({
-                  url: deleteUrl,
-                  type: 'DELETE',
-                  data: {
-                      _token: '{{ csrf_token() }}'
-                  },
-                  success: function(response) {
-                      $('#datatables').DataTable().ajax.reload();
-                      Swal.fire({
-                          title: 'Deleted!',
-                          text: response.message,
-                          icon: 'success',
-                          confirmButtonText: 'OK'
-                      });
-                  },
-                  error: function(xhr, status, error) {
-                      console.error("Error deleting data:", error);
-                      Swal.fire({
-                          title: 'Error!',
-                          text: 'There was an error deleting the data.',
-                          icon: 'error',
-                          confirmButtonText: 'OK'
-                      });
-                  }
-              });
-          }
-      });
-  });
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                $('#edit-modal').modal('hide');
+                $('#datatables').DataTable().ajax.reload();
+                Swal.fire({
+                    title: 'Success!',
+                    text: response.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error updating data:", error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: xhr.responseJSON?.message || 'There was an error updating data.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    });
+
+    // Event handler for delete button
+    $(document).on('click', '.delete-btn', function() {
+        let id = $(this).data('id');
+        let deleteUrl = '{{ route("pembayaran.destroy", ":id") }}'.replace(':id', id);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $('#datatables').DataTable().ajax.reload();
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error deleting data:", error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'There was an error deleting the data.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
+    });
 });
-
 </script>
 
 @endsection

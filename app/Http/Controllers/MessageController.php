@@ -82,7 +82,6 @@ class MessageController extends Controller
         }
     }
 
-
     public function create(Request $request, $id)
     {
         try {
@@ -93,7 +92,7 @@ class MessageController extends Controller
                 ], 404);
             }
 
-            $sharing = SharingSession::where('uuid', $id)->with('pembayaran.customer')->first();
+            $sharing = SharingSession::with('pembayaran')->where('uuid', $id)->with('pembayaran.customer')->first();
 
             if (!$sharing) {
                 return response()->json([
@@ -109,6 +108,13 @@ class MessageController extends Controller
                         'message' => 'Session Sharing sudah berakhir.'
                     ], 404);
                 }
+            }
+
+            if ($sharing->pembayaran->status_konsul == 'sukses') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Session Sharing sudah berakhir.'
+                ], 404);
             }
 
             if ($this->user->role_id !== 2 && $this->user->role_id !== 3) {
@@ -139,20 +145,17 @@ class MessageController extends Controller
     public function end_session($id)
     {
         try {
-            if ($this->user->role_id == 4) {
-                $sharing = SharingSession::where('uuid', $id)->first();
-                $sharing->update([
-                    'expired_at' => now()
-                ]);
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Sharing Session telah selesai.'
-                ], 200);
-            }
+            $sharing = SharingSession::with('pembayaran')->where('uuid', $id)->first();
+            $sharing->update([
+                'expired_at' => now()
+            ]);
+            $sharing->pembayaran()->update([
+                'status_konsul' => 'sukses'
+            ]);
             return response()->json([
                 'status' => true,
-                'message' => 'Hanya pihak customer yang bisa mengakhiri sharing session.'
-            ], 400);
+                'message' => 'Sharing Session telah selesai.'
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,

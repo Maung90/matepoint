@@ -49,7 +49,7 @@ Route::controller(PembayaranController::class)->middleware('auth')->group(functi
     Route::get('/pembayaran/get/{id}', 'get')->name('pembayaran.get');
     Route::put('/pembayaran/{id}', 'update')->name('pembayaran.update');
     Route::delete('/pembayaran/{id}', 'destroy')->name('pembayaran.destroy');
-    Route::post('/upload-bukti', 'uploadBukti')->name('upload.bukti');
+    Route::put('/upload-bukti/{id}', 'uploadBukti')->name('upload.bukti');
     Route::get('/pembayaran/table/customer', 'tableCustomer')->name('pembayaran.tableCustomer');
     Route::get('/pembayaran-customer', 'viewCustomer');
 });

@@ -24,18 +24,13 @@ class TalentController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        // Validasi input dari form
         $request->validate([
             'id_worker' => 'required|integer',
             'id_customer' => 'required|integer',
             'harga_worker' => 'required|integer',
             'sharing_session' => 'required|in:offline,online',
         ]);
-        $statusKonsul = "proses";
-        $statusBayar = "unpaid"; 
 
-        // Cek kode pembayaran terakhir di database
         $lastPayment = Pembayaran::orderBy('id', 'desc')->first();
 
         if ($lastPayment) { 
@@ -47,20 +42,18 @@ class TalentController extends Controller
             $kodePembayaran = 'TRX001';
         }
 
-        // Simpan data ke database dengan kode pembayaran yang baru
-        $proses = Pembayaran::create([
+        Pembayaran::create([
             'id_worker' => $request->id_worker,
             'id_customer' => $request->id_customer,
             'harga' => $request->harga_worker,
             'sharing_session' => $request->sharing_session,
             'kode_pembayaran' => $kodePembayaran,
-            'status_konsul' => $statusKonsul,
-            'status_bayar' => $statusBayar,
+            'status_konsul' => "proses",
+            'status_bayar' => "unpaid",
         ]);
-       // return $proses;
-        // Redirect atau kembali dengan pesan sukses 
-        return redirect()->back()->with('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
-        // return redirect()->route('/list-pembayaran')->with('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
+
+        session()->flash('success', 'Pembayaran berhasil disimpan dengan kode: ' . $kodePembayaran);
+        return redirect()->back();
     }
 
     public function search(Request $request)
@@ -68,10 +61,15 @@ class TalentController extends Controller
         $query = $request->get('query'); // Ambil input dari permintaan pencarian
         
         // Pencarian dalam database menggunakan model
-        $results = User::where('name', 'LIKE', "%{$query}%")
-        ->where('role_id', '=', '3')
-        ->get();
-
+        
+        $results = User::where('role_id', '3')->get();
+        
+        if ($query) {
+            $results = User::where('name', 'LIKE', "%{$query}%")
+            ->where('role_id', '=', '3')
+            ->get();
+        }
+        
         return response()->json($results); // Kembalikan hasil dalam format JSON
     }
 }

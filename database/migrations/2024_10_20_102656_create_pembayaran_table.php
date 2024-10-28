@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreign('id_worker')->references('id')->on('users')->onDelete('cascade'); 
             $table->double('harga');
             $table->enum('sharing_session', ['offline','online']);
-            $table->enum('status_konsul', ['pending','proses','sukses','batal']);
+            $table->enum('status_konsul', ['proses','sukses']);
             $table->timestamps();
         });
     }
