@@ -20,7 +20,7 @@
 	<link rel="stylesheet" href="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.min.css') }}">
 
 	<!-- Core Css -->
-	<link  id="themeColors"  rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
+	<link  id="themeColors"  rel="stylesheet" href="{{ asset('assets/css/style-purple.css') }}" />
 	@yield('css')
 </head>
 <body>
