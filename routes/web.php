@@ -21,9 +21,7 @@ Route::get('/dashboard', function () {
 Route::get('/user', function () {
     return view('user');
 });
-Route::get('/list-pembayaran', function () {
-    return view('pembayaran');
-});
+
 
 Route::get('/chat', function () {
     return view('chat');
@@ -45,6 +43,9 @@ Route::get('/daftar', function () {
 Route::resource('list-pembayaran', PembayaranController::class);
 
 Route::controller(PembayaranController::class)->middleware('auth')->group(function () {
+    Route::get('/pembayaran/table/admin', 'tableAdmin')->name('pembayaran.tableAdmin');
+    Route::get('/pembayaran', 'viewAdmin');
+
     Route::get('/pembayaran/{id}', 'edit')->name('pembayaran.edit');
     Route::get('/pembayaran/get/{id}', 'get')->name('pembayaran.get');
     Route::put('/pembayaran/{id}', 'update')->name('pembayaran.update');

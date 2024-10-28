@@ -74,7 +74,7 @@
 							</a>
 						</li>
 						<li class="sidebar-item">
-							<a class="sidebar-link {{ Request::is('/list-pembayaran') ? 'active' : '' }}" href="/list-pembayaran" aria-expanded="false">
+							<a class="sidebar-link {{ Request::is('/pembayaran') ? 'active' : '' }}" href="/pembayaran" aria-expanded="false">
 								<span><i class="ti ti-currency-dollar"></i></span>
 								<span class="hide-menu">Pembayaran</span>
 							</a>

@@ -27,6 +27,61 @@ class PembayaranController extends Controller
         return view('pembayaran');
     }
 
+    public function viewAdmin()
+    {
+        return view('pembayaran'); 
+    }
+    public function tableAdmin()
+    {
+        $pembayarans = Pembayaran::with(['customer', 'worker']) 
+        ->orderByDesc('id');
+
+        return DataTables::of($pembayarans)
+            ->addColumn('no', function ($row) {
+                static $counter = 0;
+                return ++$counter;
+            })
+            ->addColumn('nama_customer', function ($row) {
+                return $row->customer->name;
+            })
+            ->addColumn('nama_worker', function ($row) {
+                return $row->worker->name;
+            })
+            ->addColumn('status_konsul', function ($row) {
+                $badge = $row->status_konsul == 'proses' ? 'warning' : 'primary';
+                return '<span class="rounded-pill badge text-capitalize bg-' . $badge . '">' . $row->status_konsul . '</span>';
+            })
+            ->addColumn('sharing_session', function ($row) {
+                $badge = $row->sharing_session == 'offline' ? 'info' : 'primary';
+                return '<span class="rounded-pill badge text-capitalize bg-' . $badge . '">' . $row->sharing_session . '</span>';
+            })
+            ->addColumn('status_bayar', function ($row) {
+                $badge = $row->status_bayar == 'paid' ? 'success' : 'danger';
+                return '<span class="rounded-pill badge text-capitalize bg-' . $badge . '">' . $row->status_bayar . '</span>';
+            })
+            ->addColumn('created_at', function ($row) {
+                return $row->created_at;
+            })
+            ->addColumn('action', function ($row) {
+                return '
+                    <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-success info-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#info-modal">
+                        <i class="ti ti-info-circle"></i>
+                    </button>
+                    <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-primary upload-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#upload-modal">
+                        <i class="ti ti-upload"></i>
+                    </button>
+                    <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-warning edit-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#edit-modal">
+                    <i class="ti ti-pencil"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm waves-effect waves-light btn-danger delete-btn" id="sa-confirm" data-id="'.$row->id.'">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                ';
+                
+            })
+            ->rawColumns(['status_konsul', 'sharing_session', 'status_bayar', 'action'])
+            ->make(true);
+    }
 
     public function viewCustomer()
     {
@@ -66,7 +121,7 @@ class PembayaranController extends Controller
             })
             ->addColumn('action', function ($row) {
                 return '
-                    <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-primary info-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#info-modal">
+                    <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-success info-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#info-modal">
                         <i class="ti ti-info-circle"></i>
                     </button>
                     <button type="button" class="capitalize btn btn-sm waves-effect waves-light btn-primary upload-btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#upload-modal">
